@@ -1,4 +1,4 @@
-# Vue.js Admin Panel Projesi
+# Tafly QR Kod Menü Sitemleri
 ## Kurulum
 
 Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip edin:
