@@ -14,7 +14,8 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip ed
 3. Backend'i başlatın (isteğe bağlı):
    ```bash
     cd server
-    node index.js
+    npm install nodemon (hata alırsanız bunu yazın hata almadan çalışırsa bu adımı atlayın) 
+    npx nodemon index.js
    ```
    
 ## Kullanılan Teknolojiler
