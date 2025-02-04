@@ -1,0 +1,22 @@
+{
+  "sidebar": {
+    "title": "Tafly QR Kod Menü Sistemleri",
+    "dashboard": "Gösterge Paneli",
+    "search": "Ara",
+    "statistics": "İstatistikler",
+    "docs": "Dokümanlar",
+    "products": "Ürünler",
+    "settings": "Ayarlar",
+    "messages": "Mesajlar",
+    "account": "Hesap",
+    "hide": "Gizle",
+    "show": "Göster",
+    "home": "Ana Sayfa"
+    },
+  "settings": {
+    "save": "Kaydet",
+    "title": "Ayarlar",
+    "language": "Dil",
+    "theme": "Tema"
+  }
+}

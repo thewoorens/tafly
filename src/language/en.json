@@ -1,0 +1,22 @@
+{
+    "sidebar": {
+        "title": "Tafly QR Code Menu Systems",
+        "dashboard": "Dashboard",
+        "search": "Search",
+        "statistics": "Statistics",
+        "docs": "Docs",
+        "products": "Products",
+        "settings": "Settings",
+        "messages": "Messages",
+        "account": "Account",
+        "hide": "Hide",
+        "show": "Show",
+        "home": "Home"
+    },
+    "settings": {
+        "save": "Save",
+        "title": "Settings",
+        "language": "Language",
+        "theme": "Theme"
+    }
+}
