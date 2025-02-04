@@ -1,24 +1,36 @@
-# tafly
+# Vue.js Admin Panel Projesi
+## Kurulum
 
-## Project setup
-```
-npm install
-```
+Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip edin:
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+1. Paketleri kurun:
+   ```bash
+    npm install
+    ```
+2. Frontend'i başlatın:
+   ```bash
+   npm run serve
+   ```
+3. Backend'i başlatın (isteğe bağlı):
+   ```bash
+    cd server
+    node index.js
+   ```
+   
+## Kullanılan Teknolojiler
+- Frontend
+  - Vue.js
+  - Tailwind CSS
+  
 
-### Compiles and minifies for production
-```
-npm run build
-```
+- Backend
+  - Express.js
+  - Axios
 
-### Lints and fixes files
-```
-npm run lint
-```
+## İletişim
+- E-Posta: [erenergut2@gmail.com](mailto:erenergut2@gmail.com)
+- GitHub: [thewoorens](https://github.com/thewoorens)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Lisans
+#### Bu proje MIT lisansı altında lisanslanmıştır.
+#### powered by [kernelsoftware](https://kernelsoftware.com.tr) 
