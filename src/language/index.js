@@ -1,21 +1,19 @@
-// src/i18n/index.js
 import { createI18n } from 'vue-i18n';
 
-// Dil dosyalarını import edin
 import en from './en.json';
 import tr from './tr.json';
+import de from './de.json';
 
-// Dil mesajlarını tanımlayın
 const messages = {
     en,
     tr,
+    de,
 };
 
-// i18n örneğini oluşturun
 const i18n = createI18n({
-    locale: 'tr', // Varsayılan dil
-    fallbackLocale: 'en', // Fallback dil
-    messages, // Dil mesajları
+    locale: 'en',
+    fallbackLocale: 'en',
+    messages,
 });
 
 export default i18n;

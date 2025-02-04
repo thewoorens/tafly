@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
+const apiServices = false;
+
 app.get('/', (req, res) => {
-    res.send({ message: 'Hello !' });
+    res.send({ API_Status: apiServices });
 });
 
 app.listen(port, () => {

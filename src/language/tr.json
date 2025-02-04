@@ -11,8 +11,9 @@
     "account": "Hesap",
     "hide": "Gizle",
     "show": "Göster",
-    "home": "Ana Sayfa"
-    },
+    "home": "Ana Sayfa",
+    "help": "Yardım"
+  },
   "settings": {
     "save": "Kaydet",
     "title": "Ayarlar",
