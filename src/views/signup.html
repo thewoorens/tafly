@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tafly QR Code Menu Systems - İşletme Kaydı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+
+        .brand-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .signup-card {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .signup-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .signup-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-subtitle {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .signup-body {
+            padding: 2.5rem 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 2.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 1rem 1rem 1rem 2.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: #f8fafc;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .password-requirements {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .password-requirement {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .password-requirement i {
+            font-size: 0.75rem;
+        }
+
+        .requirement-met {
+            color: var(--success-color);
+        }
+
+        .signup-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37,99,235,0.2);
+        }
+
+        .terms-text {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 1.5rem;
+        }
+
+        .terms-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .signup-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .signup-body {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="signup-card">
+            <div class="signup-header">
+                <h1 class="signup-title">İşletme Kaydı</h1>
+                <p class="signup-subtitle">QR menü sistemini kullanmaya başlayın</p>
+            </div>
+
+            <div class="signup-body">
+                <form id="signupForm" onsubmit="return false;">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="businessName">İşletme Adı</label>
+                            <div class="input-group">
+                                <i class="fas fa-building input-icon"></i>
+                                <input type="text" id="businessName" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="businessType">İşletme Türü</label>
+                            <div class="input-group">
+                                <i class="fas fa-store input-icon"></i>
+                                <select id="businessType" class="form-select" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="restaurant">Restoran</option>
+                                    <option value="cafe">Kafe</option>
+                                    <option value="bar">Bar</option>
+                                    <option value="other">Diğer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="ownerName">Yetkili Adı</label>
+                            <div class="input-group">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="ownerName" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="ownerName">Yetkili Soyadı</label>
+                            <div class="input-group">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="ownerName" class="form-input" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group full-width">
+                            <label class="form-label" for="email">E-posta</label>
+                            <div class="input-group">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="email" class="form-input" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="password">Şifre</label>
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="password" class="form-input" required>
+                            </div>
+                            <div class="password-requirements">
+                                <div class="password-requirement">
+                                    <i class="fas fa-check-circle"></i>
+                                    En az 8 karakter
+                                </div>
+                                <div class="password-requirement">
+                                    <i class="fas fa-check-circle"></i>
+                                    Bir büyük harf
+                                </div>
+                                <div class="password-requirement">
+                                    <i class="fas fa-check-circle"></i>
+                                    Bir sayı
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="confirmPassword">Şifre Tekrar</label>
+                            <div class="input-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="confirmPassword" class="form-input" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="signup-button">
+                        <i class="fas fa-user-plus"></i>
+                        Kayıt Ol
+                    </button>
+
+                    <p class="terms-text">
+                        Kayıt olarak <a href="#" class="terms-link">kullanım şartlarını</a> ve 
+                        <a href="#" class="terms-link">gizlilik politikasını</a> kabul etmiş olursunuz.
+                    </p>
+
+                    <p class="footer-text">
+                        Zaten hesabınız var mı? 
+                        <a href="#" class="footer-link">Giriş yapın</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const requirements = document.querySelectorAll('.password-requirement');
+
+        password.addEventListener('input', function() {
+            const hasLength = this.value.length >= 8;
+            const hasUpperCase = /[A-Z]/.test(this.value);
+            const hasNumber = /[0-9]/.test(this.value);
+
+            requirements[0].classList.toggle('requirement-met', hasLength);
+            requirements[1].classList.toggle('requirement-met', hasUpperCase);
+            requirements[2].classList.toggle('requirement-met', hasNumber);
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Form validation and submission logic here
+            console.log('Form submitted');
+        });
+    </script>
+</body>
+</html>
