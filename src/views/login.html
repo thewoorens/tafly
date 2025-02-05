@@ -269,6 +269,20 @@
                 padding: 2rem;
             }
         }
+
+        .email-wrapper {
+    position: relative;
+}
+
+.email-icon {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    color: #6b7280;
+    pointer-events: none;
+}
+
     </style>
 </head>
 <body>
@@ -289,8 +303,9 @@
             </div>
 
             <form id="loginForm" onsubmit="return false;">
-                <div class="form-group">
-                    <label class="form-label" for="email">E-posta Adresi</label>
+              <div class="form-group">
+                <label class="form-label" for="email">E-posta Adresi</label>
+                <div class="email-wrapper">
                     <input 
                         type="email" 
                         id="email" 
@@ -298,8 +313,11 @@
                         placeholder="E-Mail"
                         required
                     >
-                    <div class="error-message" id="emailError">Geçerli bir e-posta adresi giriniz</div>
+                    <i class="fas fa-envelope email-icon"></i>
                 </div>
+                <div class="error-message" id="emailError">Geçerli bir e-posta adresi giriniz</div>
+            </div>
+            
 
                 <div class="form-group">
                     <label class="form-label" for="password">Şifre</label>
