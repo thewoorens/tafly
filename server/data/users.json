@@ -1,0 +1,124 @@
+{
+  "userslist": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 2,
+      "name": "Jane Doe",
+      "email": "example.@gmail.com",
+      "role": "User"
+    },
+    {
+      "id": 3,
+      "name": "John Smith",
+      "email": "example.@gmail.com",
+      "role": "User"
+    },
+    {
+      "id": 4,
+      "name": "Jane Smith",
+      "email": "example.@gmail.com",
+      "role": "User"
+    },
+    {
+      "id": 5,
+      "name": "John Johnson",
+      "email": "example.@gmail.com",
+      "role": "User"
+    },
+    {
+      "id": 6,
+      "name": "Jane Johnson",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 7,
+      "name": "John Brown",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 8,
+      "name": "Jane Brown",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 9,
+      "name": "John White",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 10,
+      "name": "Jane White",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 11,
+      "name": "John Black",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 12,
+      "name": "Jane Black",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 13,
+      "name": "John Green",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 14,
+      "name": "Jane Green",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 15,
+      "name": "John Blue",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 16,
+      "name": "Jane Blue",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 17,
+      "name": "John Red",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 18,
+      "name": "Eren Ergut",
+      "email": "erenergut@gmail.com",
+      "role": "Full-Stack Developer"
+    },
+    {
+      "id": 19,
+      "name": "John Yellow",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    },
+    {
+      "id": 20,
+      "name": "Jane Yellow",
+      "email": "example.@gmail.com",
+      "role": "Admin"
+    }
+  ]
+}

@@ -320,18 +320,7 @@
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <div class="nav-links">
-            <a href="#" class="nav-link" title="Geri"><i class="fas fa-arrow-left"></i></a>
-            <a href="#" class="nav-link" title="Paylaş"><i class="fas fa-share"></i></a>
-            <a href="#" class="nav-link" title="Yeni"><i class="fas fa-plus"></i></a>
-            <a href="#" class="nav-link" title="Menü"><i class="fas fa-square"></i></a>
-            <a href="#" class="nav-link" title="Diğer"><i class="fas fa-ellipsis-h"></i></a>
-        </div>
-    </nav>
-
     <script>
-        // Password visibility toggle
         const togglePassword = document.getElementById('togglePassword');
         const password = document.getElementById('password');
         
@@ -342,7 +331,6 @@
             this.classList.toggle('fa-eye-slash');
         });
 
-        // Form validation
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -352,7 +340,6 @@
             
             let isValid = true;
             
-            // Email validation
             if (!email.value.match(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)) {
                 document.getElementById('emailError').style.display = 'block';
                 isValid = false;
@@ -360,7 +347,6 @@
                 document.getElementById('emailError').style.display = 'none';
             }
             
-            // Password validation
             if (password.value.length < 8) {
                 document.getElementById('passwordError').style.display = 'block';
                 isValid = false;
@@ -374,7 +360,6 @@
                     password: password.value,
                     rememberMe: rememberMe
                 });
-                // Burada giriş işlemleri için gerekli kod eklenebilir
             }
         });
     </script>

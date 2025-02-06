@@ -16,7 +16,7 @@
             </svg>
             <span class="ml-2 text-sm font-medium">Ana Sayfa</span>
           </router-link>
-          <router-link to="/*" active-class="bg-gray-200" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+          <router-link to="/login" active-class="bg-gray-200" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
 
             <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor">
@@ -33,7 +33,7 @@
             </svg>
             <span class="ml-2 text-sm font-medium">{{ $t('sidebar.statistics') }}</span>
           </router-link>
-          <router-link to="/*" active-class="bg-gray-200" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
+          <router-link to="/login" active-class="bg-gray-200" class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300">
 
             <svg class="w-6 h-6 stroke-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor">

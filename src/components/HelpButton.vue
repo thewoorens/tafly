@@ -17,37 +17,57 @@
 </template>
 
 <script>
+import {ref, onMounted} from 'vue';
 import HelpModal from './Modal/HelpModal.vue';
+import {fetchData} from '@/apiService';
 
 export default {
   name: 'HelpButton',
-  components: {
-    HelpModal,
-  },
-  data() {
-    return {
-      isHelpModalOpen: false,
-      isServerConnected: true,
-      userInfo: {
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        role: 'Admin',
-      },
-      version: '1.0.0',
-    };
-  },
-  methods: {
-    openHelpModal() {
-      this.isHelpModalOpen = true;
-      document.getElementById('help-button').classList.remove('jump');
-    },
-    closeHelpModal() {
-      this.isHelpModalOpen = false;
-      document.getElementById('help-button').classList.add('jump');
+  components: {HelpModal},
+  setup() {
+    const isHelpModalOpen = ref(false);
+    const isServerConnected = ref(true);
+    const userInfo = ref({name: 'Ad Bulunamadı', email: 'Mail Bulunamadı', role: 'Rol Bulunamadı'});
+    const version = ref('1.0.0');
+    const helpButton = ref(null);
 
-    },
-  },
+    const checkServerStatus = async () => {
+      const data = await fetchData('http://localhost:3000/api/get/server-status');
+      if (data) isServerConnected.value = data.server;
+    };
+
+    const getUserInfo = async () => {
+      const userId = 18;
+      const data = await fetchData(`http://localhost:3000/api/get/?userId=${userId}`);
+      if (data) userInfo.value = data;
+    };
+
+    const getVersion = async () => {
+      const data = await fetchData('http://localhost:3000/api/get/version');
+      if (data) version.value = data.version;
+    };
+
+    const openHelpModal = () => {
+      isHelpModalOpen.value = true;
+      helpButton.value?.classList.remove('jump');
+    };
+
+    const closeHelpModal = () => {
+      isHelpModalOpen.value = false;
+      helpButton.value?.classList.add('jump');
+    };
+
+    onMounted(() => {
+      checkServerStatus();
+      setInterval(checkServerStatus, 5000);
+      getUserInfo();
+      getVersion();
+    });
+
+    return {isHelpModalOpen, isServerConnected, userInfo, version, openHelpModal, closeHelpModal, helpButton};
+  }
 };
+
 </script>
 
 <style scoped>
