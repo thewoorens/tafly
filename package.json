@@ -8,9 +8,14 @@
     "start": "node server/index.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.48.1",
+    "cookie-parser": "^1.4.7",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "supabase": "^2.9.6",
     "vue": "^3.2.13",
     "vue-i18n": "^11.1.0",
     "vue-router": "^4.5.0",
@@ -24,7 +29,8 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "socket": "^0.14.43"
   },
   "eslintConfig": {
     "root": true,

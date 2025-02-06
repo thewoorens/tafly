@@ -33,6 +33,9 @@
       <div class="mt-4 text-center">
         <router-link to="/register" class="text-blue-500 hover:underline">Hesabınız yok mu? Kayıt Olun</router-link>
       </div>
+      <div v-if="error" class="mt-4 text-center text-red-500">
+        {{ error }}
+      </div>
     </div>
   </div>
 </template>
@@ -44,21 +47,42 @@ export default {
     return {
       email: '',
       password: '',
+      error: '',
     };
+  },
+  created() {
+    // Kullanıcının oturum açıp açmadığını kontrol et
+    fetch('http://localhost:3000/api/protected', {credentials: 'include'})
+        .then(res => {
+          if (res.ok) {
+            // Kullanıcı zaten giriş yapmışsa, otomatik olarak /cp sayfasına yönlendir
+            this.$router.push('/cp');
+          }
+        })
+        .catch(err => console.log("Oturum kontrol hatası => ", err));
   },
   methods: {
     login() {
-      // Giriş işlemi burada yapılacak
-      const user = {
-        email: this.email,
-        password: this.password,
-      };
-      this.$store.dispatch('auth/login', user) // Vuex action'ını tetikle
-          .then(() => {
-            this.$router.push('/'); // Giriş başarılıysa ana sayfaya yönlendir
+      this.error = '';
+      fetch('http://localhost:3000/api/post/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email: this.email, password: this.password}),
+        credentials: 'include',
+      })
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) {
+              this.error = data.error;
+              console.log("Hata => " + data.error);
+            } else {
+              console.log("Login başarılı");
+              this.$router.push('/cp');
+            }
           })
-          .catch((error) => {
-            alert('Giriş başarısız: ' + error.message); // Hata mesajı göster
+          .catch(err => {
+            this.error = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+            console.log("Login hatası => ", err);
           });
     },
   },

@@ -59,7 +59,7 @@ export default {
 
     onMounted(() => {
       checkServerStatus();
-      setInterval(checkServerStatus, 5000);
+      setInterval(checkServerStatus, 15000);
       getUserInfo();
       getVersion();
     });
