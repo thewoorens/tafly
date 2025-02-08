@@ -20,7 +20,7 @@ function log2(req, res, next) {
 }
 
 app.use(cors({
-    origin: 'http://localhost:8080',
+    origin: 'https://kernelsoftware.kesug.com/',
     credentials: true
 }));
 
@@ -192,7 +192,8 @@ app.post('/api/post/createCategory', async (req, res) => {
 
 
 function authenticateToken(req, res, next) {
-    const token = req.cookies['auth-token'] || req.headers['authorization'];
+    const token = req.cookies['auth-token'] || req.headers['authorization']?.split(' ')[1];
+    console.log("🔍 Token received:", token);
 
     if (!token) {
         console.warn("⚠️ Access Denied: No token provided");
@@ -236,7 +237,7 @@ app.post('/api/post/login', async (req, res) => {
 
         res.cookie('auth-token', token, {
             httpOnly: true,
-            secure: false, //TODO: 🚨 Localhost'ta false, prod ortamda true olmalı
+            secure: true, //TODO: 🚨 Localhost'ta false, prod ortamda true olmalı
             sameSite: 'Strict',
             maxAge: 604800 // 7 gün
         });
