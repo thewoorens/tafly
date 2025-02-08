@@ -34,8 +34,15 @@
         </div>
       </div>
 
-      <!-- Kaydet Butonu -->
-      <div class="flex justify-end mt-4">
+
+      <div class="flex justify-between mt-4">
+        <button
+            @click="logout"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all flex items-center"
+        >
+          <span class="material-icons text-white text-lg mr-1">logout</span>
+          Çıkış Yap
+        </button>
         <button
             @click="saveSettings"
             class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center"
@@ -67,8 +74,28 @@ export default {
       this.$emit('close');
     },
     saveSettings() {
+      localStorage.setItem('language', this.selectedLanguage);
       this.$i18n.locale = this.selectedLanguage;
       this.closeModal();
+    },
+    logout() {
+      localStorage.clear();
+      sessionStorage.clear();
+      fetch('http://localhost:3000/api/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+          .then(res => {
+            if (res.ok) {
+              this.$router.push('/login');
+            }
+          })
+          .catch(err => console.log("Çıkış hatası => ", err));
+      this.closeModal();
+      window.location.reload();
     },
   },
 };

@@ -43,9 +43,10 @@
         <div>
           <label class="block text-sm font-semibold text-gray-700">Kullanıcı Bilgileri</label>
           <div class="space-y-1 text-gray-800">
-            <div><strong>Ad:</strong> {{ userInfo.name }}</div>
+            <div><strong>Ad-Soyad:</strong> {{ userInfo.owner_first_name }} {{ userInfo.owner_last_name }}</div>
             <div><strong>E-posta:</strong> {{ userInfo.email }}</div>
-            <div><strong>Rol:</strong> <span class="capitalize">{{ userInfo.role }}</span></div>
+            <div><strong>İşletme Adı:</strong> <span class="capitalize">{{ userInfo.business_name }}</span></div>
+            <div><strong>İşletme Türü:</strong> <span class="capitalize">{{ userInfo.business_type }}</span></div>
           </div>
         </div>
       </div>
@@ -61,7 +62,7 @@
       <!-- İmza -->
       <div class="text-center text-sm text-gray-500 mt-6 border-t pt-4">
         <a href="https://kernelsoftware.com.tr" target="_blank" class="hover:underline text-blue-600 font-medium">
-          kernelsoftware.com.tr
+          kernelsoftware tarafından geliştirildi ❤️
         </a>
       </div>
     </div>

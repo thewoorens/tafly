@@ -51,11 +51,9 @@ export default {
     };
   },
   created() {
-    // Kullanıcının oturum açıp açmadığını kontrol et
     fetch('http://localhost:3000/api/protected', {credentials: 'include'})
         .then(res => {
           if (res.ok) {
-            // Kullanıcı zaten giriş yapmışsa, otomatik olarak /cp sayfasına yönlendir
             this.$router.push('/cp');
           }
         })
@@ -76,7 +74,7 @@ export default {
               this.error = data.error;
               console.log("Hata => " + data.error);
             } else {
-              console.log("Login başarılı");
+              console.log("Login başarılı" + JSON.stringify(data.user));
               this.$router.push('/cp');
             }
           })

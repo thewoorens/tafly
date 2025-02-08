@@ -36,7 +36,8 @@ export default {
           return res.json();
         })
         .then(data => {
-          console.log("Authenticated User:", data.user);
+          localStorage.setItem('userInfo', JSON.stringify(data.user));
+          console.log("Kaydedilen Veri:", JSON.parse(localStorage.getItem('userInfo')));
           this.loading = false;
         })
         .catch(() => {

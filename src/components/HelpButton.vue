@@ -19,35 +19,53 @@
 <script>
 import {ref, onMounted} from 'vue';
 import HelpModal from './Modal/HelpModal.vue';
-import {fetchData} from '@/apiService';
 
 export default {
   name: 'HelpButton',
   components: {HelpModal},
+
   setup() {
     const isHelpModalOpen = ref(false);
     const isServerConnected = ref(true);
-    const userInfo = ref({name: 'Ad Bulunamadı', email: 'Mail Bulunamadı', role: 'Rol Bulunamadı'});
+    const userInfo = ref({
+      email: 'Yükleniyor...',
+      business_name: 'Yükleniyor...',
+      business_type: 'Yükleniyor...',
+      owner_first_name: 'Yükleniyor...',
+      owner_last_name: 'Yükleniyor...'
+    });
     const version = ref('1.0.0');
     const helpButton = ref(null);
 
     const checkServerStatus = async () => {
-      const data = await fetchData('http://localhost:3000/api/get/server-status');
+      const response = await fetch('http://localhost:3000/api/get/server-status');
+      const data = await response.json();
       if (data) isServerConnected.value = data.server;
     };
 
-    const getUserInfo = async () => {
-      const userId = 18;
-      const data = await fetchData(`http://localhost:3000/api/get/?userId=${userId}`);
-      if (data) userInfo.value = data;
+    const getUserInfo = () => {
+      const userId = JSON.parse(localStorage.getItem('id'));
+      if (!userId) return;
+
+      fetch(`http://localhost:3000/api/get/user?userId=${encodeURIComponent(userId)}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data && !data.error) userInfo.value = data[0];
+          });
     };
 
+
     const getVersion = async () => {
-      const data = await fetchData('http://localhost:3000/api/get/version');
-      if (data) version.value = data.version;
+      fetch('http://localhost:3000/api/get/version')
+          .then(response => response.json())
+          .then(data => {
+            if (data) version.value = data.version;
+          })
+          .catch(error => console.error('Error fetching version:', error));
     };
 
     const openHelpModal = () => {
+
       isHelpModalOpen.value = true;
       helpButton.value?.classList.remove('jump');
     };
@@ -57,16 +75,18 @@ export default {
       helpButton.value?.classList.add('jump');
     };
 
+
     onMounted(() => {
-      checkServerStatus();
-      setInterval(checkServerStatus, 15000);
       getUserInfo();
+      checkServerStatus();
       getVersion();
     });
+
 
     return {isHelpModalOpen, isServerConnected, userInfo, version, openHelpModal, closeHelpModal, helpButton};
   }
 };
+
 
 </script>
 
