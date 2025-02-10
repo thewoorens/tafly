@@ -95,7 +95,6 @@ export default {
           })
           .catch(err => console.log("Çıkış hatası => ", err));
       this.closeModal();
-      window.location.reload();
     },
   },
 };

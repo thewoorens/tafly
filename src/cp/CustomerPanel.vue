@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-screen h-screen bg-gray-300">
-    <!-- Loading ekranı -->
-    <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-900" style="z-index: 999999 !important;">
+    <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-gray-900"
+         style="z-index: 999999 !important;">
       <div class="flex items-center space-x-2">
         <span class="material-icons text-white text-4xl animate-spin">autorenew</span>
         <span class="text-white font-semibold">Yükleniyor...</span>
@@ -21,6 +21,7 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import HelpButton from '../components/HelpButton.vue';
+import "tippy.js/dist/tippy.css";
 
 export default {
   name: 'CustomerPanel',
@@ -30,19 +31,27 @@ export default {
     };
   },
   created() {
-    fetch('http://localhost:3000/api/protected', { credentials: 'include' })
+    fetch('http://localhost:3000/api/protected', {
+      credentials: 'include', // Çerezleri gönder
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth-token')}`, // Token ekleyerek gönderiyoruz
+        'Content-Type': 'application/json'
+      }
+    })
         .then(res => {
           if (!res.ok) throw new Error('Unauthorized');
           return res.json();
         })
         .then(data => {
           localStorage.setItem('userInfo', JSON.stringify(data.user));
-          console.log("Kaydedilen Veri:", JSON.parse(localStorage.getItem('userInfo')));
+          console.log("🔹 Kaydedilen Veri:", JSON.parse(localStorage.getItem('userInfo')));
           this.loading = false;
         })
         .catch(() => {
+          console.error("❌ Yetkilendirme başarısız! Giriş sayfasına yönlendiriliyor...");
           this.$router.push('/login');
         });
+
   },
   components: {
     SideBar,
@@ -57,7 +66,11 @@ export default {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

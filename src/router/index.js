@@ -50,6 +50,10 @@ const routes = [
         name: 'RegisterView',
         component: RegisterView,
     },
+    {
+        path: '/',
+        redirect: '/login',  // Ana sayfayı login sayfasına yönlendiriyoruz
+    }
 ];
 
 const router = createRouter({

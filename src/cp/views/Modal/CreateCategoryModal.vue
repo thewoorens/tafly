@@ -46,7 +46,7 @@
                 id="category-image"
                 @change="handleFileUpload"
                 accept="image/*"
-                class="mt-2 w-full p-2 border rounded-lg shadow-sm file:bg-indigo-50 file:text-indigo-700 file:border-none file:py-2 file:px-4 file:rounded-lg file:hover:bg-indigo-100 transition-all"
+                class="mt-2 pointer w-full p-2 border rounded-lg shadow-sm file:bg-indigo-50 file:text-indigo-700 file:border-none file:py-2 file:px-4 file:rounded-lg file:hover:bg-indigo-100 transition-all"
                 required
             />
           </div>
@@ -75,7 +75,7 @@
 
 <script>
 import {ref} from "vue";
-import CryptoJS from "crypto-js";
+import Swal from "sweetalert2";
 
 export default {
   name: "CreateCategoryModal",
@@ -86,15 +86,11 @@ export default {
     },
   },
   emits: ["close-modal", "category-created"],
-  created() {
-    console.log("ID=>>>>>>>>", JSON.parse(localStorage.getItem("userInfo")).id);
-  },
   setup(props, {emit}) {
     const categoryName = ref("");
     const categoryDesc = ref("");
     const categoryImage = ref(null);
     const imagePreview = ref(null);
-    const base64Hash = ref("");
 
     const handleFileUpload = (event) => {
       const file = event.target.files[0];
@@ -102,65 +98,67 @@ export default {
       if (file) {
         categoryImage.value = file;
 
+        // Görsel önizleme
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-          const base64 = reader.result;
-          base64Hash.value = CryptoJS.SHA256(base64).toString(CryptoJS.enc.Hex);
-          imagePreview.value = base64;
+          imagePreview.value = reader.result;
         };
       }
     };
 
-    const submitCategory = () => {
-      if (!categoryName.value || !categoryDesc.value || !base64Hash.value) {
-        alert("Lütfen tüm alanları doldurun!");
+    const submitCategory = async () => {
+      if (!categoryName.value || !categoryDesc.value || !categoryImage.value) {
+        await Swal.fire({
+          title: 'Kategori Eklenemedi',
+          text: "Lütfen tüm alanları doldurunuz!",
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Tamam'
+        })
         return;
       }
 
-      const categoryData = {
-        name: categoryName.value,
-        description: categoryDesc.value,
-        image: base64Hash.value,
-        ownerId: JSON.parse(localStorage.getItem("userInfo")).id
-      };
+      const formData = new FormData();
+      formData.append("name", categoryName.value);
+      formData.append("description", categoryDesc.value);
+      formData.append("ownerId", JSON.parse(localStorage.getItem("userInfo")).id);
+      formData.append("image", categoryImage.value);
 
-      console.log("📤 Sending Category Data:", categoryData);
+      try {
+        const response = await fetch("http://localhost:3000/api/post/createCategory", {
+          method: "POST",
+          body: formData, // 📤 Artık JSON değil, FormData gönderiyoruz!
+        });
 
-      fetch("http://localhost:3000/api/post/createCategory", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(categoryData),
-      })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              console.log("✅ Category created successfully:", data);
-              alert("Kategori başarıyla oluşturuldu!");
-              emit("category-created"); // Yeni kategori eklendiğinde parent component'i bilgilendir
-              closeModal();
-            } else {
-              console.error("❌ Category creation error:", data.error);
-              alert("Kategori oluşturulurken bir hata oluştu: " + data.error);
-            }
-          })
-          .catch((error) => {
-            console.error("❌ Unexpected error:", error);
-            alert("Kategori oluşturulurken bir hata oluştu!");
-          });
+        const data = await response.json();
+
+        if (data.success) {
+          console.log("✅ Category created successfully:", data);
+          emit("category-created"); // Yeni kategori eklendiğini bildir
+          closeModal();
+        } else {
+          console.error("❌ Category creation error:", data.error);
+          await Swal.fire({
+            title: 'Kategori Eklenemedi',
+            text: "Bu işlem gerçekleşirken bir hata oluştu!",
+            icon: 'warning',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Tamam'
+          }).then(() => console.log("Erooror: " + data.error))
+        }
+      } catch (error) {
+        console.error("❌ Unexpected error:", error);
+        alert("Kategori oluşturulurken bir hata oluştu!");
+      }
     };
 
     const closeModal = () => {
-      // Formu sıfırla
       categoryName.value = "";
       categoryDesc.value = "";
       categoryImage.value = null;
-      base64Hash.value = "";
       imagePreview.value = null;
 
-      // Modal'ı kapat
       emit("close-modal");
     };
 
@@ -169,13 +167,13 @@ export default {
       categoryDesc,
       categoryImage,
       imagePreview,
-      base64Hash,
       handleFileUpload,
       submitCategory,
       closeModal,
     };
   },
 };
+
 </script>
 
 <style scoped>
