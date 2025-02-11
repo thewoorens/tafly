@@ -112,20 +112,36 @@ export default {
       business_name: '',
       business_type: '',
       owner_last_name: '',
-      errors: {}, // Hata mesajları için obje
-      globalError: '', // Global hata mesajı
+      errors: {},
+      globalError: '',
     };
   },
   created() {
-    // Kullanıcının oturum açıp açmadığını kontrol et
-    fetch('http://localhost:3000/api/protected', {credentials: 'include'})
-        .then(res => {
-          if (res.ok) {
-            // Kullanıcı zaten giriş yapmışsa, otomatik olarak /cp sayfasına yönlendir
-            this.$router.push('/cp');
-          }
-        })
-        .catch(err => console.log("Oturum kontrol hatası => ", err));
+    if (localStorage.getItem('auth-token')){
+      fetch('http://localhost:3000/api/protected', {
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Unauthorized');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log("🔹 Protected data:", data);
+            window.location.href = '/cp';
+          })
+          .catch(error => {
+            console.error("❌ Error:", error);
+          });
+    } else {
+      console.log("No user found");
+    }
+
   },
   methods: {
     validateForm() {

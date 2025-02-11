@@ -38,20 +38,21 @@ export default {
         'Content-Type': 'application/json'
       }
     })
-        .then(res => {
-          if (!res.ok) throw new Error('Unauthorized');
-          return res.json();
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Unauthorized');
+          }
+          return response.json();
         })
         .then(data => {
-          localStorage.setItem('userInfo', JSON.stringify(data.user));
-          console.log("🔹 Kaydedilen Veri:", JSON.parse(localStorage.getItem('userInfo')));
+          console.log("User Info => ", data);
+          console.log();
           this.loading = false;
         })
-        .catch(() => {
-          console.error("❌ Yetkilendirme başarısız! Giriş sayfasına yönlendiriliyor...");
-          this.$router.push('/login');
+        .catch(error => {
+          console.error("❌ Error:", error);
+          window.location.href = '/login';
         });
-
   },
   components: {
     SideBar,

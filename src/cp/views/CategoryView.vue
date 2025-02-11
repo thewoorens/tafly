@@ -8,12 +8,12 @@
       <i class="material-icons align-center mr-2">add_circle</i> Kategori Ekle
     </button>
 
-    <div v-if="categories.length === 0" class="text-center py-10">
-      <p class="text-gray-600">Kategori eklenmemiş. Lütfen bir kategori ekleyin.</p>
+    <div v-if="!categories || !categories.data || categories.data.length === 0" class="text-center py-10">
+      <p class="text-gray-600">Herhangi bir Kategori eklenmemiş. Lütfen bir kategori ekleyerek başlayın.</p>
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="category in categories" :key="category.id" class="bg-white shadow-lg rounded-lg p-4">
+      <div v-for="category in categories.data" :key="category.id" class="bg-white shadow-lg rounded-lg p-4">
         <img
             :src="category.image"
             alt="Kategori Resmi"
@@ -48,18 +48,6 @@
                 />
               </svg>
             </button>
-<!--    TODO:Editleme fonksiyonu eklenicek        <button-->
-<!--                @click="deleteCategory(category.id)"-->
-<!--                class="ml-2 p-2 text-white font-medium bg-orange-300 rounded-lg hover:bg-orange-400 transition-all"-->
-<!--                :data-tippy-content="`${category.name} Kategorisini düzenleyin`"-->
-<!--            >-->
-<!--              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"-->
-<!--                   stroke="currentColor" class="size-6">-->
-<!--                <path stroke-linecap="round" stroke-linejoin="round"-->
-<!--                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>-->
-<!--              </svg>-->
-
-<!--            </button>-->
           </div>
         </div>
       </div>
@@ -67,8 +55,15 @@
 
     <CreateCategoryModal :showModal="isModalOpen" @close-modal="closeModal" @category-created="fetchCategories"/>
 
-    <div v-if="isImageModalOpen" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6">
+    <div
+        v-if="isImageModalOpen"
+        class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
+        @click="closeImageModal"
+    >
+      <div
+          class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6"
+          @click.stop
+      >
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-bold text-gray-800">Büyütülmüş Resim</h2>
           <button @click="closeImageModal" class="text-gray-500 hover:text-gray-700">
@@ -82,11 +77,12 @@
       </div>
     </div>
   </div>
+
 </template>
+
 <script>
 import {ref, onMounted, onUpdated} from "vue";
 import CreateCategoryModal from "./Modal/CreateCategoryModal.vue";
-import apiClient from "@/cp/apiClient";
 import Swal from "sweetalert2";
 import tippy from "tippy.js";
 
@@ -98,7 +94,7 @@ export default {
   setup() {
     const isModalOpen = ref(false);
     const isImageModalOpen = ref(false);
-    const categories = ref([]);
+    const categories = ref({});
     const selectedImage = ref("");
 
     const openModal = () => {
@@ -122,6 +118,17 @@ export default {
 
     const fetchCategories = async () => {
       try {
+        // Önce localStorage'dan kategorileri kontrol et
+        // const cachedCategories = localStorage.getItem("cachedCategories");
+        //
+        // if (cachedCategories) {
+        //   const parsedCategories = JSON.parse(cachedCategories);
+        //   if (parsedCategories.success && Array.isArray(parsedCategories.data)) {
+        //     categories.value = parsedCategories; // categories.value'yi doğru bir şekilde ayarla
+        //     return; // Eğer localStorage'da varsa, sunucuya istek göndermeden çık
+        //   }
+        // }
+
         const userInfo = localStorage.getItem("userInfo");
         if (!userInfo) {
           throw new Error("User information not found in localStorage");
@@ -132,19 +139,32 @@ export default {
           throw new Error("ownerId not found in userInfo");
         }
 
-        const {data} = await apiClient.get("/categories", {ownerId});
+        const response = await fetch(`http://localhost:3000/api/get/categories?ownerId=${ownerId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+          },
+        });
 
-        if (data.error === "No categories found") {
-          categories.value = [];
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data || data.error === "No categories found") {
+          categories.value = {success: true, data: []}; // Kategoriler boşsa, data'yı boş bir dizi olarak ayarla
           localStorage.removeItem("cachedCategories");
         } else {
           categories.value = data;
-          localStorage.setItem("cachedCategories", JSON.stringify(data));
+          localStorage.setItem("cachedCategories", JSON.stringify(data)); // localStorage'a kaydet
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
     };
+
 
     const deleteCategory = async (categoryId) => {
       try {
@@ -152,8 +172,6 @@ export default {
         if (!ownerId) {
           throw new Error("ownerId not found in localStorage");
         }
-
-        const params = {id: categoryId, ownerId};
 
         const result = await Swal.fire({
           title: "Kategori Silmek İstediğinize Emin Misiniz?",
@@ -167,10 +185,30 @@ export default {
         });
 
         if (result.isConfirmed) {
-          const {data} = await apiClient.delete("/deleteCategory", params);
+          const response = await fetch(
+              `http://localhost:3000/api/delete/deleteCategory?id=${categoryId}`,
+              {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
+                },
+              }
+          );
 
-          await fetchCategories();
-          localStorage.setItem("cachedCategories", JSON.stringify(data));
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          // Kategori silindikten sonra localStorage'ı güncelle
+          const cachedCategories = JSON.parse(localStorage.getItem("cachedCategories"));
+
+          if (cachedCategories && cachedCategories.success && Array.isArray(cachedCategories.data)) {
+            const updatedCategories = cachedCategories.data.filter((cat) => cat.id !== categoryId);
+            localStorage.setItem("cachedCategories", JSON.stringify({ success: true, data: updatedCategories }));
+          }
+
+          await fetchCategories(); // Kategorileri yeniden çek
         }
       } catch (error) {
         console.error("Error deleting category:", error);
@@ -195,9 +233,7 @@ export default {
     onMounted(() => {
       fetchCategories();
       initTippy();
-
     });
-
 
     onUpdated(() => {
       initTippy();

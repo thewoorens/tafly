@@ -15,7 +15,7 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip ed
    ```bash
     cd server
     npm install nodemon (hata alırsanız bunu yazın hata almadan çalışırsa bu adımı atlayın) 
-    npx nodemon index.js
+    npx nodemon app.js
    ```
    
 ## Kullanılan Teknolojiler

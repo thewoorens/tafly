@@ -98,7 +98,6 @@ export default {
       if (file) {
         categoryImage.value = file;
 
-        // Görsel önizleme
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
@@ -108,6 +107,20 @@ export default {
     };
 
     const submitCategory = async () => {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      const token = localStorage.getItem("auth-token");
+
+      if (!userInfo || !userInfo.id) {
+        await Swal.fire({
+          title: 'Hata',
+          text: "Kullanıcı bilgileri bulunamadı. Lütfen giriş yapın.",
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Tamam'
+        });
+        return;
+      }
+
       if (!categoryName.value || !categoryDesc.value || !categoryImage.value) {
         await Swal.fire({
           title: 'Kategori Eklenemedi',
@@ -115,21 +128,28 @@ export default {
           icon: 'warning',
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Tamam'
-        })
+        });
         return;
       }
 
       const formData = new FormData();
       formData.append("name", categoryName.value);
       formData.append("description", categoryDesc.value);
-      formData.append("ownerId", JSON.parse(localStorage.getItem("userInfo")).id);
+      formData.append("ownerId", userInfo.id); // userInfo.id kullanılıyor
       formData.append("image", categoryImage.value);
 
       try {
         const response = await fetch("http://localhost:3000/api/post/createCategory", {
           method: "POST",
-          body: formData, // 📤 Artık JSON değil, FormData gönderiyoruz!
+          headers: {
+            'Authorization': `Bearer ${token}`, // Token'ı header'a ekleyin
+          },
+          body: formData,
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
         const data = await response.json();
 
@@ -145,11 +165,17 @@ export default {
             icon: 'warning',
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Tamam'
-          }).then(() => console.log("Erooror: " + data.error))
+          }).then(() => console.log("Error: " + data.error));
         }
       } catch (error) {
         console.error("❌ Unexpected error:", error);
-        alert("Kategori oluşturulurken bir hata oluştu!");
+        await Swal.fire({
+          title: 'Hata',
+          text: "Kategori oluşturulurken bir hata oluştu!",
+          icon: 'error',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Tamam'
+        });
       }
     };
 

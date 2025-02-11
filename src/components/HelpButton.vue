@@ -44,14 +44,7 @@ export default {
     };
 
     const getUserInfo = () => {
-      const userId = JSON.parse(localStorage.getItem('id'));
-      if (!userId) return;
-
-      fetch(`http://localhost:3000/api/get/user?userId=${encodeURIComponent(userId)}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data && !data.error) userInfo.value = data[0];
-          });
+      userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
     };
 
 

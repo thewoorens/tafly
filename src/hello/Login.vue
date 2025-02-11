@@ -48,40 +48,84 @@ export default {
       email: '',
       password: '',
       error: '',
+      isLoading: false, // Yükleme durumu için
     };
   },
-  created() {
-    fetch('http://localhost:3000/api/protected', {credentials: 'include'})
-        .then(res => {
-          if (res.ok) {
-            this.$router.push('/cp');
-          }
-        })
-        .catch(err => console.log("Oturum kontrol hatası => ", err));
+  async created() {
+    // Kullanıcı oturum açmışsa korumalı route'a yönlendir
+    if (localStorage.getItem('auth-token')) {
+      await this.checkAuth();
+    }
   },
   methods: {
-    login() {
-      this.error = '';
-      fetch('http://localhost:3000/api/post/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email: this.email, password: this.password}),
+    // Kullanıcı oturumunu kontrol et
+    async checkAuth() {
+      try {
+        const response = await this.fetchProtectedData();
+        if (response.ok) {
+          window.location.href = '/cp';
+        }
+      } catch (error) {
+        console.error("❌ Error:", error);
+      }
+    },
+
+    // Korumalı route'dan veri çek
+    async fetchProtectedData() {
+      return await fetch('http://localhost:3000/api/protected', {
         credentials: 'include',
-      })
-          .then(res => res.json())
-          .then(data => {
-            if (data.error) {
-              this.error = data.error;
-              console.log("Hata => " + data.error);
-            } else {
-              console.log("Login başarılı" + JSON.stringify(data.user));
-              this.$router.push('/cp');
-            }
-          })
-          .catch(err => {
-            this.error = 'Bir hata oluştu. Lütfen tekrar deneyin.';
-            console.log("Login hatası => ", err);
-          });
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    },
+
+    // Giriş işlemi
+    async login() {
+      this.error = '';
+      this.isLoading = true; // Yükleme durumunu aktif et
+
+      try {
+        const response = await fetch('http://localhost:3000/api/post/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: this.email, password: this.password }),
+          credentials: 'include',
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          this.handleLoginError(data.error);
+          return;
+        }
+
+        // Token ve kullanıcı bilgilerini kaydet
+        localStorage.setItem('auth-token', data.token);
+        localStorage.setItem('userInfo', JSON.stringify(data.user));
+
+        // Korumalı route'a yönlendir
+        await this.checkAuth();
+      } catch (err) {
+        this.handleLoginError('Bir hata oluştu. Lütfen tekrar deneyin.');
+        console.error("Login hatası => ", err);
+      } finally {
+        this.isLoading = false; // Yükleme durumunu pasif et
+      }
+    },
+
+    // Giriş hatalarını yönet
+    handleLoginError(error) {
+      switch (error) {
+        case 'Invalid credentials':
+          this.error = 'Geçersiz e-posta veya şifre.';
+          break;
+        default:
+          this.error = 'Beklenmedik bir hata oluştu.';
+          break;
+      }
+      console.log("Hata => ", error);
     },
   },
 };
