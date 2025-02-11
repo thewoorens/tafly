@@ -11,7 +11,7 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip ed
    ```bash
    npm run serve
    ```
-3. Backend'i başlatın (isteğe bağlı):
+3. Backend'i başlatın:
    ```bash
     cd server
     npm install nodemon (hata alırsanız bunu yazın hata almadan çalışırsa bu adımı atlayın) 
