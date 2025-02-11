@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 
 // Middlewares
 app.use(cors({
-    origin: 'https://kernelsoftware.kesug.com',
+    origin: 'http://localhost:8080',
     credentials: true
 }));
 app.use(express.json());
