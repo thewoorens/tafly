@@ -90,11 +90,14 @@ export default {
       })
           .then(res => {
             if (res.ok) {
-              this.$router.push('/login');
+              window.location.reload();
             }
           })
           .catch(err => console.log("Çıkış hatası => ", err));
+
       this.closeModal();
+      window.location.reload();
+
     },
   },
 };

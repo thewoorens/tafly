@@ -16,7 +16,7 @@ const routes = [
             {
                 path: 'home',
                 name: 'HomeView',
-                component: {cp: HomeView},
+                components: {cp: HomeView},
             },
             {
                 path: 'stats',
@@ -52,7 +52,7 @@ const routes = [
     },
     {
         path: '/',
-        redirect: '/login',  // Ana sayfayı login sayfasına yönlendiriyoruz
+        redirect: '/login',
     }
 ];
 

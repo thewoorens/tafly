@@ -1,31 +1,36 @@
-// controllers/authController.js
 const jwt = require('jsonwebtoken');
 const {supabase} = require('../utils/supabase');
 const {JWT_SECRET} = require('../utils/jwt');
 
 async function login(req, res) {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
 
     try {
-        const {data, error} = await supabase.auth.signInWithPassword({email, password});
+        // Supabase Auth ile giriş yap
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
         if (error || !data.user) {
-            return res.status(401).json({error: 'Invalid credentials'});
+            return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        const token = jwt.sign({userId: data.user.id}, JWT_SECRET, {expiresIn: '1h'});
+        // JWT token oluştur
+        const token = jwt.sign({ userId: data.user.id }, JWT_SECRET, { expiresIn: '1h' });
 
-        const {data: userData, error: userError} = await supabase
+        // Kullanıcı bilgilerini `users` tablosundan çek
+        const { data: userData, error: userError } = await supabase
             .from('users')
             .select('*')
-            .eq('userId', data.user.id)
+            .eq('userId', data.user.id) // `userId` ile eşleştir
             .single();
 
         if (userError || !userData) {
-            return res.status(500).json({error: 'Failed to fetch user data'});
+            return res.status(500).json({ error: 'Failed to fetch user data', details: userError?.message });
         }
 
-        res.cookie('auth-token', token, {httpOnly: true, secure: false, sameSite: 'Strict', maxAge: 604800});
+        // Token'ı cookie olarak ayarla
+        res.cookie('auth-token', token, { httpOnly: true, secure: false, sameSite: 'Strict', maxAge: 604800 });
+
+        // Başarılı yanıt
         res.json({
             success: true,
             token,
@@ -40,41 +45,48 @@ async function login(req, res) {
         });
     } catch (err) {
         console.error("❌ Unexpected error:", err);
-        res.status(500).json({error: 'An unexpected error occurred'});
+        res.status(500).json({ error: 'An unexpected error occurred', details: err.message });
     }
 }
-
 async function register(req, res) {
-    const {email, password, businessName, businessType, ownerFirstName, ownerLastName} = req.body;
+    const {email, password, ownerFirstName, ownerLastName} = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({error: 'Email and password are required'});
+    }
 
     try {
+        // Supabase Auth ile kullanıcı kaydı
         const {data: authData, error: authError} = await supabase.auth.signUp({email, password});
 
         if (authError) {
-            return res.status(500).json({error: 'Failed to register user'});
+            return res.status(500).json({error: 'Failed to register user', details: authError.message});
         }
 
-        const userId = authData.user.id;
+        const userId = authData.user?.id;
 
+        if (!userId) {
+            return res.status(500).json({error: 'User ID not found after registration'});
+        }
+
+        // Kullanıcı bilgilerini `users` tablosuna kaydet
         const {data: userData, error: userError} = await supabase
             .from('users')
             .insert([{
-                userId,
+                userId, // Supabase Auth'tan gelen UUID
                 email,
-                business_name: businessName,
-                business_type: businessType,
                 owner_first_name: ownerFirstName,
                 owner_last_name: ownerLastName
             }])
             .select();
 
         if (userError) {
-            return res.status(500).json({error: 'Failed to save user data'});
+            return res.status(500).json({error: 'Failed to save user data', details: userError.message});
         }
 
         res.json({authData, userData});
     } catch (err) {
-        res.status(500).json({error: 'An unexpected error occurred'});
+        res.status(500).json({error: 'An unexpected error occurred', details: err.message});
     }
 }
 

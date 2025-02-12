@@ -121,12 +121,15 @@ export default {
         case 'Invalid credentials':
           this.error = 'Geçersiz e-posta veya şifre.';
           break;
+        case 'Failed to fetch user data':
+          this.error = 'Kullanıcı bilgileri alınamadı.';
+          break;
         default:
           this.error = 'Beklenmedik bir hata oluştu.';
           break;
       }
       console.log("Hata => ", error);
-    },
+    }
   },
 };
 </script>

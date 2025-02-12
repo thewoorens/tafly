@@ -54,8 +54,6 @@
     {
       "email": "kullanici@example.com",
       "password": "sifre123",
-      "businessName": "İşletme Adı",
-      "businessType": "İşletme Türü",
       "ownerFirstName": "Ad",
       "ownerLastName": "Soyad"
     }

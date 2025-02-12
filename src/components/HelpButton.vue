@@ -44,7 +44,8 @@ export default {
     };
 
     const getUserInfo = () => {
-      userInfo.value = JSON.parse(localStorage.getItem("userInfo"));
+      userInfo.value = JSON.parse(localStorage.getItem("businessInfo"));
+      console.log("userInfo: " + userInfo.value);
     };
 
 
