@@ -1,0 +1,39 @@
+{
+  "sidebar": {
+    "title": "Tafly QR-Code-Menüs",
+    "dashboard": "Armaturenbrett",
+    "search": "Suche",
+    "statistics": "Statistiken",
+    "docs": "Dokumente",
+    "products": "Produkte",
+    "settings": "Einstellungen",
+    "messages": "Nachrichten",
+    "account": "Konto",
+    "hide": "Verstecken",
+    "show": "Anzeigen",
+    "home": "Startseite",
+    "help": "Hilfe"
+  },
+  "settings": {
+    "save": "Speichern",
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "theme": "Thema"
+  },
+  "category": "Kategorie",
+  "surveys": "Umfragen",
+  "all time": "Alle Zeit",
+  "previewMenu": "Menüvorschau",
+  "devicesShowingQRMenu": "Geräte, die das QR-Menü anzeigen",
+  "addCategory": "Kategorie hinzufügen",
+  "createCategory": "Kategorie erstellen",
+  "categoryAdi": "Kategoriename",
+  "enterCategoryname": "Kategoriename eingeben",
+  "categoryDescription": "Kategoriebeschreibung",
+  "addaShortDescriptionaboutYourcaTegory": "Fügen Sie eine kurze Beschreibung zu Ihrer Kategorie hinzu",
+  "categoryImage": "Kategoriebild",
+  "saveCategory": "Kategorie speichern",
+  "ManageYourgeneralsettings": "Verwalten Sie Ihre allgemeinen Einstellungen",
+  "signOut": "Ausloggen"
+    
+}

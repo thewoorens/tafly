@@ -1,0 +1,37 @@
+{
+  "sidebar": {
+    "title": "Tafly QR Kod Menü Sistemleri",
+    "dashboard": "Gösterge Paneli",
+    "search": "Ara",
+    "statistics": "İstatistikler",
+    "docs": "Dokümanlar",
+    "products": "Ürünler",
+    "settings": "Ayarlar",
+    "messages": "Mesajlar",
+    "account": "Hesap",
+    "hide": "Gizle",
+    "show": "Göster",
+    "home": "Ana Sayfa",
+    "help": "Yardım"
+  },
+  "settings": {
+    "save": "Kaydet",
+    "title": "Ayarlar",
+    "language": "Dil",
+    "theme": "Tema"
+  },
+  "category": "Kategori",
+  "surveys": "Anketler",
+  "previewMenu": "Menüyü Önizle",
+  "devicesShowingQRMenu": "QR Menü Gösteren Cihazlar",
+  "addCategory": "Kategori Ekle",
+  "createCategory": "Kategori Oluştur",
+  "categoryAdi": "Kategori Adı",
+  "enterCategoryname": "Kategori Adını Girin",
+  "categoryDescription": "Kategori Açıklaması",
+  "addaShortDescriptionaboutYourcaTegory": "Kategoriniz hakkında kısa bir açıklama ekleyin",
+  "categoryImage": "Kategori Resmi",
+  "saveCategory": "Kategoriyi Kaydet",
+  "ManageYourgeneralsettings": "Genel ayarlarınızı yönetin", 
+  "signOut": "Çıkış Yap"
+}

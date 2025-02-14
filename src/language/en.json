@@ -1,0 +1,38 @@
+{
+  "sidebar": {
+    "title": "Tafly QR Code Menu Systems",
+    "dashboard": "Dashboard",
+    "search": "Search",
+    "statistics": "Statistics",
+    "docs": "Docs",
+    "products": "Products",
+    "settings": "Settings",
+    "messages": "Messages",
+    "account": "Account",
+    "hide": "Hide",
+    "show": "Show",
+    "home": "Home",
+    "help": "Help"
+  },
+  "settings": {
+    "save": "Save",
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "category": "Category",
+  "surveys": "Surveys",
+  "all time": "All Time",
+  "previewMenu": "Preview Menu",
+  "devicesShowingQRMenu": "Devices Showing QR Menu",
+  "addCategory": "Add Category",
+  "createCategory": "Create Category",
+  "categoryAdi": "Category Name",
+  "enterCategoryname": "Enter Category Name",
+  "categoryDescription": "Category Description",
+  "addaShortDescriptionaboutYourcaTegory": "Add a Short Description about Your Category",
+  "categoryImage": "Category Image",
+  "saveCategory": "Save Category",
+  "ManageYourgeneralsettings": "Manage Your General Settings",
+  "signOut": "Sign Out"
+}
