@@ -1,6 +1,10 @@
 <template>
   <div class="container mx-auto p-6">
+<<<<<<< HEAD
     <h1 class="text-3xl font-bold text-gray-900 text-left mb-6">{{ $t('devicesShowingQRMenu') }}</h1>
+=======
+    <h1 class="text-3xl font-bold text-gray-900 text-left mb-6">{{ $t("devicesWithQRMenu") }}</h1>
+>>>>>>> f755ec7a95b54c302f7e4d606d90d81d99dc0916
 
     <!-- Sekmeler -->
     <div class="border-b border-gray-300 overflow-x-auto pb-2">
@@ -75,7 +79,7 @@ export default {
   data() {
     return {
       currentTab: 'Tüm Zamanlar',
-      tabs: ['Tüm Zamanlar', 'Sipariş Verenler', 'İşaretlenenler', 'Ankete Katılanlar', 'Engellenenler'],
+      tabs: [this.$t('allTime'), 'Sipariş Verenler', 'İşaretlenenler', 'Ankete Katılanlar', 'Engellenenler'],
     };
   },
   mounted() {

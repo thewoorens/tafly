@@ -20,6 +20,7 @@
     "language": "Sprache",
     "theme": "Thema"
   },
+<<<<<<< HEAD
   "category": "Kategorie",
   "surveys": "Umfragen",
   "all time": "Alle Zeit",
@@ -36,4 +37,10 @@
   "ManageYourgeneralsettings": "Verwalten Sie Ihre allgemeinen Einstellungen",
   "signOut": "Ausloggen"
     
+=======
+  "devicesWithQRMenu": "Geräte, auf denen das QR-Menü angezeigt wird",
+  "allTime": "Alle Zeiten",
+  "previewMenu": "Menü Vorschau",
+  "addNewCategory": "Eine neue Kategorie hinzufügen"
+>>>>>>> f755ec7a95b54c302f7e4d606d90d81d99dc0916
 }

@@ -20,6 +20,7 @@
     "language": "Language",
     "theme": "Theme"
   },
+<<<<<<< HEAD
   "category": "Category",
   "surveys": "Surveys",
   "all time": "All Time",
@@ -35,4 +36,11 @@
   "saveCategory": "Save Category",
   "ManageYourgeneralsettings": "Manage Your General Settings",
   "signOut": "Sign Out"
+=======
+  "devicesWithQRMenu": "Devices with QR Menu",
+  "allTime": "All Times",
+  "previewMenu": "Preview Menu",
+  "addNewCategory": "Add a new category"
+
+>>>>>>> f755ec7a95b54c302f7e4d606d90d81d99dc0916
 }

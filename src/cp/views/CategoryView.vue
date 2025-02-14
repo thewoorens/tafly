@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-7xl mx-auto p-6">
     <button
-        :data-tippy-content="`Yeni bir kategori ekleyin`"
+        :data-tippy-content="$t('addNewCategory')"
         @click="openModal"
         class="p-3 pointer rounded-lg shadow-lg text-white font-medium bg-indigo-600 hover:bg-indigo-700 transition-all mb-6 flex"
     >
