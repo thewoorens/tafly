@@ -19,5 +19,9 @@
     "title": "Ayarlar",
     "language": "Dil",
     "theme": "Tema"
-  }
+  },
+  "devicesWithQRMenu": "QR Menünün Gösterildiği Cihazlar",
+  "allTime": "Tüm Zamanlar",
+  "previewMenu": "Menüyü Ön İzle",
+  "addNewCategory": "Yeni bir menü oluşturun"
 }

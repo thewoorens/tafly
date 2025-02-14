@@ -19,5 +19,9 @@
     "title": "Einstellungen",
     "language": "Sprache",
     "theme": "Thema"
-  }
+  },
+  "devicesWithQRMenu": "Geräte, auf denen das QR-Menü angezeigt wird",
+  "allTime": "Alle Zeiten",
+  "previewMenu": "Menü Vorschau",
+  "addNewCategory": "Eine neue Kategorie hinzufügen"
 }

@@ -19,5 +19,10 @@
     "title": "Settings",
     "language": "Language",
     "theme": "Theme"
-  }
+  },
+  "devicesWithQRMenu": "Devices with QR Menu",
+  "allTime": "All Times",
+  "previewMenu": "Preview Menu",
+  "addNewCategory": "Add a new category"
+
 }

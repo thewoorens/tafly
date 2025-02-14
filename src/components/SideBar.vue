@@ -78,7 +78,7 @@
       </div>
       <a class="flex items-center justify-center w-full h-16 mt-auto bg-gray-200" href="#">
         <i class="material-icons">open_in_new</i>
-        <span class="ml-2 text-sm font-medium">Menüyü Ön İzle</span>
+        <span class="ml-2 text-sm font-medium">{{ $t('previewMenu') }}</span>
       </a>
     </div>
     <div v-else class="flex flex-col items-center w-16 h-full overflow-hidden text-gray-700 bg-gray-100 rounded">
