@@ -9,17 +9,10 @@
       <!-- Modal Kutusu -->
       <transition name="slide">
         <div @click.stop class="bg-white rounded-xl shadow-2xl w-full md:w-3/4 lg:w-2/3 xl:w-1/2 p-8 relative">
-          <!-- Kapatma Butonu -->
           <button @click="closeModal" class="absolute top-4 right-4 text-gray-600 hover:text-red-500">
             <span class="material-icons text-3xl">close</span>
           </button>
 
-          <!-- Modal Başlığı -->
-          <div class="flex flex-col items-center text-center border-b pb-6">
-            <span class="material-icons text-blue-500 text-5xl">help_outline</span>
-            <h2 class="text-2xl font-bold text-gray-800 mt-2">Yardım</h2>
-            <p class="text-sm text-gray-500">Sistem bilgilerinizi görüntüleyin</p>
-          </div>
 
           <!-- Veri Yoksa Uyarı Mesajı -->
           <div v-if="!userInfo" class="mt-6 text-center text-gray-600">
@@ -144,7 +137,6 @@ export default {
   setup() {
     const userInfo = ref(null);
 
-    // localStorage'dan kullanıcı bilgilerini al
     const getUserInfo = () => {
       const businessInfo = localStorage.getItem('businessInfo');
       if (businessInfo) {

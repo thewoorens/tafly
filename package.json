@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.48.1",
+    "chart.js": "^4.4.7",
     "cookie-parser": "^1.4.7",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",

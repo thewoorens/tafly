@@ -24,6 +24,7 @@
           />
         </div>
         <button
+            id="submitButton"
             type="submit"
             class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all"
         >
@@ -48,17 +49,15 @@ export default {
       email: '',
       password: '',
       error: '',
-      isLoading: false, // Yükleme durumu için
+      isLoading: false,
     };
   },
   async created() {
-    // Kullanıcı oturum açmışsa korumalı route'a yönlendir
     if (localStorage.getItem('auth-token')) {
       await this.checkAuth();
     }
   },
   methods: {
-    // Kullanıcı oturumunu kontrol et
     async checkAuth() {
       try {
         const response = await this.fetchProtectedData();
@@ -70,7 +69,6 @@ export default {
       }
     },
 
-    // Korumalı route'dan veri çek
     async fetchProtectedData() {
       return await fetch('http://localhost:3000/api/protected', {
         credentials: 'include',
@@ -81,16 +79,19 @@ export default {
       });
     },
 
-    // Giriş işlemi
     async login() {
+      console.log("Login");
+      const button = document.getElementById("submitButton");
+      button.disabled = true;
+      button.style.backgroundColor = "gray";
       this.error = '';
-      this.isLoading = true; // Yükleme durumunu aktif et
+      this.isLoading = true;
 
       try {
         const response = await fetch('http://localhost:3000/api/post/login', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: this.email, password: this.password }),
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({email: this.email, password: this.password}),
           credentials: 'include',
         });
 
@@ -101,21 +102,20 @@ export default {
           return;
         }
 
-        // Token ve kullanıcı bilgilerini kaydet
         localStorage.setItem('auth-token', data.token);
         localStorage.setItem('userInfo', JSON.stringify(data.user));
 
-        // Korumalı route'a yönlendir
         await this.checkAuth();
       } catch (err) {
         this.handleLoginError('Bir hata oluştu. Lütfen tekrar deneyin.');
         console.error("Login hatası => ", err);
       } finally {
-        this.isLoading = false; // Yükleme durumunu pasif et
+        button.disabled = false;
+        button.style.backgroundColor = "blue";
+        this.isLoading = false;
       }
     },
 
-    // Giriş hatalarını yönet
     handleLoginError(error) {
       switch (error) {
         case 'Invalid credentials':
@@ -135,5 +135,5 @@ export default {
 </script>
 
 <style scoped>
-/* Ekstra stiller buraya eklenebilir */
+
 </style>
