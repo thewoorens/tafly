@@ -20,10 +20,8 @@
     "language": "Dil",
     "theme": "Tema"
   },
-<<<<<<< HEAD
   "category": "Kategori",
   "surveys": "Anketler",
-  "previewMenu": "Menüyü Önizle",
   "devicesShowingQRMenu": "QR Menü Gösteren Cihazlar",
   "addCategory": "Kategori Ekle",
   "createCategory": "Kategori Oluştur",
@@ -34,11 +32,9 @@
   "categoryImage": "Kategori Resmi",
   "saveCategory": "Kategoriyi Kaydet",
   "ManageYourgeneralsettings": "Genel ayarlarınızı yönetin", 
-  "signOut": "Çıkış Yap"
-=======
+  "signOut": "Çıkış Yap",
   "devicesWithQRMenu": "QR Menünün Gösterildiği Cihazlar",
   "allTime": "Tüm Zamanlar",
   "previewMenu": "Menüyü Ön İzle",
   "addNewCategory": "Yeni bir menü oluşturun"
->>>>>>> f755ec7a95b54c302f7e4d606d90d81d99dc0916
 }
