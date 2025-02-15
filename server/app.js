@@ -1,42 +1,65 @@
-// app.js
 const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const itemRoutes = require('./routes/itemRoutes');
+const authRoutes = require('./routes/authRoutes');
+const businessRoutes = require('./routes/businessRoutes');
 const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+app.use(bodyParser.json());
 
-// Middlewares
 app.use(cors({
-    origin: 'http://localhost:8080',
-    credentials: true
+    origin: process.env.CLIENT_URL,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(cookieParser());
 
-// Routes
-const authRoutes = require('./routes/auth');
-const categoryRoutes = require('./routes/category');
-const userRoutes = require('./routes/user');
-const generalRoutes = require('./routes/general');
+app.get('/', async (req, res) => {
+    res.status(200).json({kernel: 'software'});
+});
 
-app.get('/', (req, res) => {
-    res.send({poweredBy: "kernelsoftware(BDT)"});
+// ✅ Yetkilendirme Middleware
+const authMiddleware = (req, res, next) => {
+    const token = req.header('Authorization');
+    if (!token) {
+        return res.status(401).json({message: "Yetkilendirme reddedildi, token eksik"});
+    }
+
+    try {
+        const tokenValue = token.split(" ")[1]; // "Bearer" önekini kaldır
+        req.user = jwt.verify(tokenValue, process.env.JWT_SECRET); // Kullanıcı bilgilerini req.user içine ekle
+        next();
+    } catch (error) {
+        res.status(403).json({message: "Geçersiz token"});
+    }
+};
+
+// ✅ Token Doğrulama Endpoint
+app.get('/api/auth/verify', authMiddleware, (req, res) => {
+    res.status(200).json({message: "Token geçerli", user: req.user});
+});
+
+// ✅ Korunan Endpoint (Sadece Yetkililere Açık)
+app.get('/api/protected', authMiddleware, (req, res) => {
+    res.json({message: "Bu veri sadece yetkili kullanıcılar içindir.", user: req.user});
+});
+
+// ✅ MongoDB Bağlantısı
+mongoose.connect(process.env.MONGODB_URI, {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
 })
+    .then(() => console.log('✅  MongoDB bağlantısı başarılı! (TaflyCP veritabanı)'))
+    .catch(err => console.log('❌  MongoDB bağlantı hatası:', err.message));
 
-app.use('/api', authRoutes);
-app.use('/api', categoryRoutes);
-app.use('/api', userRoutes);
-app.use('/api', generalRoutes);
+app.use('/api', itemRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/business', businessRoutes);
 
-// Error Handling Middleware (4 parametreli olmalı)
-app.use((err, req, res, next) => {
-    console.error("❌ Error:", err.message);
-    res.status(500).json({error: 'Internal Server Error'});
-});
-
-app.listen(port, () => {
-    console.log(`🚀 Backend services running at http://localhost:${port}`);
-});
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`✅  Backend Server Running on Port: http://localhost:${port}`));

@@ -54,81 +54,65 @@ export default {
   },
   async created() {
     if (localStorage.getItem('auth-token')) {
-      await this.checkAuth();
+      await this.fetchProtectedData();
     }
   },
   methods: {
-    async checkAuth() {
-      try {
-        const response = await this.fetchProtectedData();
-        if (response.ok) {
-          window.location.href = '/cp';
-        }
-      } catch (error) {
-        console.error("❌ Error:", error);
-      }
-    },
-
     async fetchProtectedData() {
-      return await fetch('http://localhost:3000/api/protected', {
-        credentials: 'include',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth-token')}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const token = localStorage.getItem('auth-token');
+      if (!token) {
+        throw new Error("❌ Kullanıcı yetkilendirilmemiş. Token bulunamadı.");
+      }
+
+      try {
+        return await this.$axios.get('http://localhost:3000/api/protected', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then(() => {
+          console.log("Otomotik oturum açılıyor...");
+          window.location.href = "/cp";
+        });
+      } catch (error) {
+        console.error("❌ Yetkilendirme hatası:", error.response ? error.response.data.message : error.message);
+        throw error;
+      }
     },
 
     async login() {
-      console.log("Login");
       const button = document.getElementById("submitButton");
       button.disabled = true;
-      button.style.backgroundColor = "gray";
+      button.classList.add('opacity-50');
       this.error = '';
       this.isLoading = true;
 
-      try {
-        const response = await fetch('http://localhost:3000/api/post/login', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({email: this.email, password: this.password}),
-          credentials: 'include',
-        });
-
-        const data = await response.json();
-
-        if (data.error) {
-          this.handleLoginError(data.error);
-          return;
-        }
-
-        localStorage.setItem('auth-token', data.token);
-        localStorage.setItem('userInfo', JSON.stringify(data.user));
-
-        await this.checkAuth();
-      } catch (err) {
-        this.handleLoginError('Bir hata oluştu. Lütfen tekrar deneyin.');
-        console.error("Login hatası => ", err);
-      } finally {
+      this.$axios.post('http://localhost:3000/api/auth/login', {
+        email: this.email,
+        password: this.password,
+      }).then((response) => {
+        this.isLoading = false;
         button.disabled = false;
         button.style.backgroundColor = "blue";
-        this.isLoading = false;
-      }
+        localStorage.setItem("userInfo", JSON.stringify(response.data.user));
+        localStorage.setItem("auth-token", response.data.token);
+        window.location.href = '/cp';
+      }).catch((err) => {
+        this.handleLoginError(err)
+        button.disabled = false;
+        button.classList.remove('opacity-50');
+      })
+
     },
 
     handleLoginError(error) {
-      switch (error) {
-        case 'Invalid credentials':
+      switch (error.response.status) {
+        case 400:
           this.error = 'Geçersiz e-posta veya şifre.';
-          break;
-        case 'Failed to fetch user data':
-          this.error = 'Kullanıcı bilgileri alınamadı.';
           break;
         default:
           this.error = 'Beklenmedik bir hata oluştu.';
           break;
       }
-      console.log("Hata => ", error);
     }
   },
 };

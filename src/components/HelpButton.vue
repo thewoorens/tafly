@@ -9,15 +9,12 @@
 
   <HelpModal
       :isOpen="isHelpModalOpen"
-      :isServerConnected="isServerConnected"
-      :userInfo="userInfo"
-      :version="version"
       @close="closeHelpModal"
   />
 </template>
 
 <script>
-import {ref, onMounted} from 'vue';
+import {ref} from 'vue';
 import HelpModal from './Modal/HelpModal.vue';
 
 export default {
@@ -26,40 +23,11 @@ export default {
 
   setup() {
     const isHelpModalOpen = ref(false);
-    const isServerConnected = ref(true);
-    const userInfo = ref({
-      email: 'Yükleniyor...',
-      business_name: 'Yükleniyor...',
-      business_type: 'Yükleniyor...',
-      owner_first_name: 'Yükleniyor...',
-      owner_last_name: 'Yükleniyor...'
-    });
-    const version = ref('1.0.0');
     const helpButton = ref(null);
+    helpButton.value = undefined;
 
-    const checkServerStatus = async () => {
-      const response = await fetch('http://localhost:3000/api/get/server-status');
-      const data = await response.json();
-      if (data) isServerConnected.value = data.server;
-    };
-
-    const getUserInfo = () => {
-      userInfo.value = JSON.parse(localStorage.getItem("businessInfo"));
-      console.log("userInfo: " + userInfo.value);
-    };
-
-
-    const getVersion = async () => {
-      fetch('http://localhost:3000/api/get/version')
-          .then(response => response.json())
-          .then(data => {
-            if (data) version.value = data.version;
-          })
-          .catch(error => console.error('Error fetching version:', error));
-    };
 
     const openHelpModal = () => {
-
       isHelpModalOpen.value = true;
       helpButton.value?.classList.remove('jump');
     };
@@ -70,14 +38,8 @@ export default {
     };
 
 
-    onMounted(() => {
-      getUserInfo();
-      checkServerStatus();
-      getVersion();
-    });
 
-
-    return {isHelpModalOpen, isServerConnected, userInfo, version, openHelpModal, closeHelpModal, helpButton};
+    return {isHelpModalOpen, openHelpModal, closeHelpModal, helpButton};
   }
 };
 
@@ -90,11 +52,11 @@ export default {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-15px);
   }
 }
 
 .jump {
-  animation: jump 3s infinite;
+  animation: jump 4s infinite;
 }
 </style>

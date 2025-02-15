@@ -5,6 +5,9 @@ import routes from './router';
 import './assets/tailwind.css'
 import './assets/main.css';
 import { computePosition, offset, flip, shift } from "@floating-ui/vue";
+import axios from 'axios';
+
+
 
 const vTooltip = {
     beforeMount(el, binding) {
@@ -63,6 +66,8 @@ const vTooltip = {
 
 const app = createApp(App);
 
+
+app.config.globalProperties.$axios = axios;
 app.use(i18n);
 app.use(routes);
 app.directive("tooltip", vTooltip);

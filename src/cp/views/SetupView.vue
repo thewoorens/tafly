@@ -1,180 +1,309 @@
 <template>
-  <div class="max-w-lg mx-auto p-6 text-center">
-    <h1 class="text-3xl font-bold mb-6 text-gray-800">Tafly İşletme Kurulumu</h1>
-
-    <div v-if="currentStep === 1" class="step">
-      <h2 class="text-2xl font-semibold mb-4">Adım 1: İşletme Bilgileri</h2>
-      <form @submit.prevent="nextStep" class="space-y-4">
-        <div>
-          <label for="businessName" class="block text-gray-700">İşletme Adı:</label>
-          <input type="text" id="businessName" v-model="businessInfo.business_name" required
-                 class="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-green-300"/>
+  <div class="min-h-screen m flex items-center justify-center p-4">
+    <div
+        v-if="!isSetupCompleted"
+        class="w-full max-w-4xl bg-white rounded-lg shadow-xl overflow-hidden"
+    >
+      <div class="p-6">
+        <div class="flex justify-between items-center relative">
+          <div
+              class="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 transform -translate-y-1/2 z-0"
+          ></div>
+          <div
+              v-for="(step, index) in steps"
+              :key="index"
+              class="flex items-center z-10"
+          >
+            <div
+                v-if="index > 0"
+                :class="[
+            'h-1 flex-1 mx-2 transition-all duration-300',
+            currentStep >= index ? 'bg-blue-600' : 'bg-gray-200',
+          ]"
+            ></div>
+            <div
+                :class="[
+            'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300',
+            currentStep === index
+              ? 'bg-blue-600 text-white scale-110'
+              : 'bg-gray-200 text-gray-600',
+          ]"
+            >
+              <span class="material-icons">{{ step.icon }}</span>
+            </div>
+          </div>
         </div>
-        <div>
-          <label for="businessAddress" class="block text-gray-700">İşletme Adresi:</label>
-          <input type="text" id="businessType" v-model="businessInfo.business_address" required
-                 class="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-green-300"/>
-        </div>
-        <div>
-          <label for="businessAddress" class="block text-gray-700">İşletme Türü:</label>
-          <input type="text" id="businessAddress" v-model="businessInfo.business_type" required
-                 class="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-green-300"/>
-        </div>
-        <button type="submit"
-                class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition duration-300">
-          Sonraki Adım
-        </button>
-      </form>
-    </div>
-
-    <div v-if="currentStep === 2" class="step">
-      <h2 class="text-2xl font-semibold mb-4">Adım 2: İletişim Bilgileri</h2>
-      <form @submit.prevent="nextStep" class="space-y-4">
-        <div>
-          <label for="phone" class="block text-gray-700">Telefon Numarası:</label>
-          <input type="tel" id="phone" v-model="businessInfo.phone" required
-                 class="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-green-300"/>
-        </div>
-        <div>
-          <label for="email" class="block text-gray-700">E-posta:</label>
-          <input disabled type="email" id="email" v-model="businessInfo.email"
-                 class="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-green-300"/>
-        </div>
-        <button type="submit"
-                class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition duration-300">
-          Sonraki Adım
-        </button>
-      </form>
-    </div>
-
-    <div v-if="currentStep === 3" class="step">
-      <h2 class="text-2xl font-semibold mb-4">Adım 3: Sosyal Medya Bilgileri</h2>
-      <form @submit.prevent="nextStep" class="space-y-4">
-        <div>
-          <label for="instagram" class="block text-gray-700">Instagram:</label>
-          <input type="url" id="instagram" v-model="businessInfo.socialMedia.instagram"
-                 class="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-green-300"/>
-        </div>
-        <div>
-          <label for="facebook" class="block text-gray-700">Facebook:</label>
-          <input type="url" id="facebook" v-model="businessInfo.socialMedia.facebook"
-                 class="w-full p-3 border rounded-lg shadow-sm focus:ring focus:ring-green-300"/>
-        </div>
-        <button type="submit"
-                class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition duration-300">
-          Sonraki Adım
-        </button>
-      </form>
-    </div>
-
-    <div v-if="currentStep === 4" class="step">
-      <h2 class="text-2xl font-semibold mb-4">Adım 4: Özet ve Onay</h2>
-      <div class="p-6 bg-gray-100 rounded-lg shadow-md">
-        <p><strong>İşletme Adı:</strong> {{ businessInfo.name }}</p>
-        <p><strong>Adres:</strong> {{ businessInfo.address }}</p>
-        <p><strong>İşletme Türü:</strong> {{ businessInfo.type }}</p>
-        <p><strong>Telefon:</strong> {{ businessInfo.phone }}</p>
-        <p><strong>E-posta:</strong> {{ businessInfo.email }}</p>
-        <p><strong v-if="this.businessInfo.socialMedia.facebook">Facebook Adresi: </strong><a style="color: blue;"
-                                                                                              target="_blank"
-                                                                                              :href="this.businessInfo.socialMedia.facebook">
-          {{ businessInfo.socialMedia.facebook }}</a></p>
-        <p><strong v-if="this.businessInfo.socialMedia.instagram">İnstagram Adresi: </strong><a style="color: blue;"
-                                                                                                target="_blank"
-                                                                                                :href="this.businessInfo.socialMedia.instagram">
-          {{ businessInfo.socialMedia.instagram }}</a></p>
       </div>
-      <button @click="submitSetup"
-              class="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition duration-300">
-        Kurulumu Tamamla
-      </button>
-    </div>
 
-    <div v-if="currentStep === 5" class="step animate-fade-in">
-      <h2 class="text-2xl font-semibold text-green-600">Kurulum Tamamlandı!</h2>
-      <p class="text-gray-700 mt-2">İşletme bilgileriniz başarıyla kaydedildi. 🎉</p>
-      <button @click="reload()"
-              class="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition duration-300">
-        Devam Et
+      <div class="p-6">
+        <div v-if="currentStep === 0">
+          <h2 class="text-2xl font-bold mb-4">Şirket Bilgileri</h2>
+          <input
+              v-model="companyData.name"
+              type="text"
+              placeholder="Şirket Adı"
+              required="required"
+              class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+              v-model="companyData.address"
+              type="text"
+              placeholder="Şirket Adresi"
+              required="required"
+              class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+              v-model="companyData.type"
+              type="text"
+              placeholder="Şirket Türü"
+              required="required"
+              class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div v-if="currentStep === 1">
+          <h2 class="text-2xl font-bold mb-4">İletişim Bilgileri</h2>
+          <input
+              v-model="companyData.phone"
+              type="tel"
+              required="required"
+              placeholder="Şirket Telefon Numarası"
+              class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+              v-model="companyData.email"
+              type="email"
+              placeholder="Şirket E-posta Adresi"
+              required="required"
+              class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+              v-model="companyData.social"
+              type="text"
+              placeholder="Şirket Sosyal Medya Adresleri"
+              class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div v-if="currentStep === 2">
+          <h2 class="text-2xl font-bold mb-4">Şirket Logosu</h2>
+          <input
+              type="file"
+              @change="handleLogoUpload"
+              class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <img
+              v-if="companyData.logoPreview"
+              :src="companyData.logoPreview"
+              alt="Logo Preview"
+              class="w-32 h-32 object-cover rounded-lg shadow"
+          />
+        </div>
+      </div>
+
+      <div class="p-6 border-t flex justify-between">
+        <button
+            v-if="currentStep > 0"
+            @click="prevStep"
+            class="flex items-center bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-all"
+        >
+          <span class="material-icons mr-2">arrow_back</span>
+          Geri
+        </button>
+        <button
+            v-if="currentStep < steps.length - 1"
+            @click="nextStep"
+            class="flex items-center bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all"
+        >
+          İleri
+          <span class="material-icons ml-2">arrow_forward</span>
+        </button>
+        <button
+            v-else
+            id="submitButton"
+            @click="submitForm"
+            class="flex items-center bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-all"
+        >
+          Gönder
+
+          <span class="material-icons ml-2">check</span>
+        </button>
+      </div>
+    </div>
+    <div
+        v-if="isSetupCompleted"
+        class="text-center p-8 bg-white rounded-lg shadow-xl"
+    >
+      <h2 class="text-4xl font-bold mb-4">Kurulum Tamamlandı!</h2>
+      <p class="text-gray-600 mb-6 max-w-md mx-auto whitespace-normal">
+        Tebrikler! 🎉 Şirketiniz artık hazır. Uygulamayı yeniden başlatarak yönetim ekranına geçebilir ve işlerinizi
+        kolayca yönetmeye başlayabilirsiniz. 🌟
+      </p>
+      <button
+          @click="resetForm"
+          class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all inline-flex items-center"
+      >
+        <i class="material-icons mr-2">autorenew</i>
+        Yeniden Başlat
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import {ref} from 'vue';
+import confetti from 'canvas-confetti';
+import Swal from 'sweetalert2';
+
 export default {
-  name: 'SetupView',
-  data() {
+  components: {},
+  setup() {
+    const triggerConfetti = () => {
+      confetti({
+        particleCount: 300,
+        spread: 100,
+        origin: {y: 0.6},
+      });
+    };
+
+    const steps = [
+      {icon: 'business', label: 'Şirket Bilgileri'},
+      {icon: 'contact_mail', label: 'İletişim Bilgileri'},
+      {icon: 'image', label: 'Şirket Logosu'},
+    ];
+    const currentStep = ref(0);
+    const isSetupCompleted = ref(false);
+
+    const companyData = ref({
+      name: '',
+      address: '',
+      type: '',
+      phone: '',
+      email: '',
+      social: '',
+      logo: null,
+      logoPreview: '',
+      ownerId: JSON.parse(localStorage.getItem('userInfo'))?._id,
+    });
+
+    const nextStep = () => {
+      if (currentStep.value < steps.length - 1) {
+        currentStep.value++;
+      }
+    };
+
+    const prevStep = () => {
+      if (currentStep.value > 0) {
+        currentStep.value--;
+      }
+    };
+
+    const handleLogoUpload = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        companyData.value.logo = file;
+        companyData.value.logoPreview = URL.createObjectURL(file);
+      }
+    };
+
+    const resetForm = () => {
+      window.location.reload();
+    };
+
     return {
-      currentStep: 1,
-      businessInfo: {
-        email: JSON.parse(localStorage.getItem("userInfo"))?.email,
-        business_name: '',
-        business_type: '',
-        setup_status: true,
-        business_address: '',
-        phone: '',
-        socialMedia: {
-          instagram: '',
-          facebook: ''
-        }
-      },
-      userId: JSON.parse(localStorage.getItem("userInfo"))?.id
+      steps,
+      currentStep,
+      isSetupCompleted,
+      companyData,
+      nextStep,
+      prevStep,
+      handleLogoUpload,
+      resetForm,
+      triggerConfetti,
     };
   },
   methods: {
-    async submitSetup() {
-      console.log(this.businessInfo)
-      const token = localStorage.getItem('auth-token');
+    async submitForm() {
+      const button = document.getElementById("submitButton");
+      button.disabled = true;
+      button.classList.add("opacity-50");
       try {
-        const response = await fetch('http://localhost:3000/api/post/business', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            userId: this.userId,
-            ...this.businessInfo
-          }),
+        console.log("gelen veri: " + JSON.stringify(this.companyData));
+        const response = await this.$axios.post("http://localhost:3000/api/business/create", {
+          name: this.companyData.name,
+          address: this.companyData.address,
+          type: this.companyData.type,
+          phone: this.companyData.phone,
+          email: this.companyData.email,
+          social: this.companyData.social,
+          logo: this.companyData.logo,
+          ownerId: this.companyData.ownerId,
         });
 
-        const data = await response.json();
+        console.log(response.data);
 
-        if (data.error) {
-          console.error('Failed to save business info:', data.error);
-          return;
+        await Swal.fire({
+          icon: 'success',
+          title: 'Başarılı!',
+          text: 'Şirket bilgileriniz başarıyla kaydedildi.',
+        });
+        this.triggerConfetti();
+        this.isSetupCompleted = true;
+      } catch (error) {
+        console.error(error);
+
+        if (error.response && error.response.data && error.response.data.message) {
+          const errorMessage = error.response.data.message;
+
+          if (errorMessage === 100) {
+            await Swal.fire({
+              icon: 'error',
+              title: 'Hata!',
+              text: 'Bu isimde bir şirket zaten kayıtlı.',
+            });
+            button.disabled = false;
+            button.classList.remove("opacity-50");
+          } else if (errorMessage === 101) {
+            await Swal.fire({
+              icon: 'error',
+              title: 'Hata!',
+              text: 'Bu telefon numarası zaten kayıtlı.',
+            });
+            button.disabled = false;
+            button.classList.remove("opacity-50");
+          } else if (errorMessage === 102) {
+            await Swal.fire({
+              icon: 'error',
+              title: 'Hata!',
+              text: 'Bu e-posta adresi zaten kayıtlı.',
+            });
+            button.disabled = false;
+            button.classList.remove("opacity-50");
+          } else {
+            await Swal.fire({
+              icon: 'error',
+              title: 'Hata!',
+              text: 'Bir hata oluştu. Lütfen tekrar deneyin.',
+            });
+            button.disabled = false;
+            button.classList.remove("opacity-50");
+          }
+        } else {
+          // Yanıt yoksa veya mesaj yoksa genel hata göster
+          await Swal.fire({
+            icon: 'error',
+            title: 'Hata!',
+            text: 'Bir hata oluştu. Lütfen tekrar deneyin.',
+          });
+          button.disabled = false;
+          button.classList.remove("opacity-50");
         }
-        this.nextStep();
-      } catch (err) {
-        console.error('Error saving business info:', err);
       }
     },
-    nextStep() {
-      if (this.currentStep < 5) {
-        this.currentStep++;
-      }
-    },
-    reload() {
-      window.location.reload();
-    }
-  }
+  },
 };
 </script>
 
-<style scoped>
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out;
-}
+<style scoped>
 </style>

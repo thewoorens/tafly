@@ -3,32 +3,6 @@
     <div class="bg-white p-8 rounded-lg shadow-lg w-96">
       <h2 class="text-2xl font-bold mb-6 text-center">Kayıt Ol</h2>
       <form @submit.prevent="register">
-        <!-- İşletme Sahibi Adı -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-2" for="owner_first_name">İşletme Sahibi Adı</label>
-          <input
-              v-model="owner_first_name"
-              type="text"
-              id="owner_first_name"
-              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-          />
-          <p v-if="errors.owner_first_name" class="text-red-500 text-xs">{{ errors.owner_first_name }}</p>
-        </div>
-
-        <!-- İşletme Sahibi Soyadı -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-2" for="owner_last_name">İşletme Sahibi Soy Adı</label>
-          <input
-              v-model="owner_last_name"
-              type="text"
-              id="owner_last_name"
-              class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-          />
-          <p v-if="errors.owner_last_name" class="text-red-500 text-xs">{{ errors.owner_last_name }}</p>
-        </div>
-
         <!-- E-posta -->
         <div class="mb-4">
           <label class="block text-sm font-medium mb-2" for="email">E-posta</label>
@@ -75,7 +49,6 @@
         </button>
       </form>
 
-      <!-- Kayıt olamama hatası -->
       <div v-if="globalError" class="mt-4 text-center text-red-500">
         <p>{{ globalError }}</p>
       </div>
@@ -88,43 +61,23 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+
 export default {
   name: 'RegisterView',
   data() {
     return {
-      owner_first_name: '',
       email: '',
       password: '',
       passwordRepeat: '',
-      owner_last_name: '',
       errors: {},
-      globalError: '',
+      globalError: null,
     };
   },
   created() {
     const authToken = localStorage.getItem('auth-token');
     if (authToken) {
-      fetch('http://localhost:3000/api/protected', {
-        credentials: 'include',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json'
-        }
-      })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Unauthorized');
-            }
-            return response.json();
-          })
-          .then(data => {
-            console.log("🔹 Protected data:", data);
-            this.$router.push('/cp'); // Vue Router ile yönlendirme
-          })
-          .catch(error => {
-            console.error("❌ Error:", error);
-            localStorage.removeItem('auth-token'); // Geçersiz token'ı temizle
-          });
+      this.fetchProtectedData();
     } else {
       console.log("No user found");
     }
@@ -132,18 +85,7 @@ export default {
   methods: {
     validateForm() {
       let valid = true;
-      this.errors = {}; // Önceki hataları temizle
-
-      // Alan doğrulama
-      if (!this.owner_first_name) {
-        this.errors.owner_first_name = 'İşletme sahibi adı zorunludur.';
-        valid = false;
-      }
-
-      if (!this.owner_last_name) {
-        this.errors.owner_last_name = 'İşletme sahibi soyadı zorunludur.';
-        valid = false;
-      }
+      this.errors = {};
 
       if (!this.email) {
         this.errors.email = 'E-posta zorunludur.';
@@ -173,46 +115,63 @@ export default {
       const button = document.getElementById("registerButton");
       button.disabled = true;
       button.classList.add('opacity-50');
-      this.globalError = '';
+
       if (!this.validateForm()) {
+        button.disabled = false;
+        button.classList.remove('opacity-50');
         return;
       }
 
       const user = {
         email: this.email,
         password: this.password,
-        ownerFirstName: this.owner_first_name,
-        ownerLastName: this.owner_last_name
       };
-
-      fetch('http://localhost:3000/api/post/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user),
-      })
-          .then((response) => {
-            if (!response.ok) {
-              return response.json().then(data => {
-                throw new Error(data.error || 'Kayıt sırasında bir hata oluştu.');
-              });
+      this.$axios.post('http://localhost:3000/api/auth/register', {
+        email: user.email,
+        password: user.password
+      }).then(() => {
+        Swal.fire({
+          title: 'Kayıt Başarılı!',
+          text: 'Hesabınız başarıyla oluşturuldu. Giriş yapabilirsiniz.',
+          icon: 'success',
+          confirmButtonText: 'Tamam'
+        }).then(
+            () => {
+              this.$router.push('/login');
             }
-            button.disabled = false;
-            button.classList.remove('opacity-50');
-            return response.json();
-          })
-          .then(() => {
-            this.$router.push('/login'); // Kayıt başarılıysa login sayfasına yönlendir
-            button.disabled = false;
-            button.classList.remove('opacity-50');
-          })
-          .catch((error) => {
-            this.globalError = error.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
-            console.error('Kayıt hatası:', error);
-            button.disabled = false;
-            button.classList.remove('opacity-50');
-          });
+        );
+      }).catch((err) => {
+        this.globalError = 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.';
+        button.disabled = false;
+        button.classList.remove('opacity-50');
+        if (err.response && err.response.status === 400) {
+          this.globalError = "Böyle bir mail adresi kayıtlı";
+        } else {
+          this.globalError = 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.';
+        }
+      });
+
+
+    },
+    async fetchProtectedData() {
+      const token = localStorage.getItem('auth-token');
+      if (!token) {
+        throw new Error("❌ Kullanıcı yetkilendirilmemiş. Token bulunamadı.");
+      }
+
+      try {
+        return await this.$axios.get('http://localhost:3000/api/protected', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }).then(() => {
+          console.log("Otomotik oturum açılıyor...");
+          window.location.href = "/cp";
+        });
+      } catch (error) {
+        console.error("❌ Yetkilendirme hatası:", error.response ? error.response.data.message : error.message);
+        throw error;
+      }
     },
   },
 };
