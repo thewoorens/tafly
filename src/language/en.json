@@ -33,7 +33,7 @@
   "addaShortDescriptionaboutYourcaTegory": "Add a Short Description about Your Category",
   "categoryImage": "Category Image",
   "saveCategory": "Save Category",
-  "ManageYourgeneralsettings": "Manage Your General Settings",
+  "ManageYourgeneralsettings": "Manage your general settings. The app will restart after saving the settings.",
   "signOut": "Sign Out",
   "devicesWithQRMenu": "Devices with QR Menu",
   "allTime": "All Times",

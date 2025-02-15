@@ -25,7 +25,6 @@
 <script>
 import SideBar from '../components/SideBar.vue';
 import HelpButton from '../components/HelpButton.vue';
-import "tippy.js/dist/tippy.css";
 import SetupView from "@/cp/views/SetupView.vue";
 
 export default {

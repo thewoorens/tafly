@@ -62,6 +62,7 @@
           <div>
             <button
                 type="submit"
+                id="createBtn"
                 class="w-full p-3 rounded-lg shadow-lg text-white font-medium bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all"
             >
             {{ $t('saveCategory') }}
@@ -107,6 +108,9 @@ export default {
     };
 
     const submitCategory = async () => {
+      const button = document.getElementById("createBtn");
+      button.disabled = true;
+      button.classList.add("opacity-50");
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       const token = localStorage.getItem("auth-token");
 
@@ -157,6 +161,9 @@ export default {
           console.log("✅ Category created successfully:", data);
           emit("category-created"); // Yeni kategori eklendiğini bildir
           closeModal();
+          button.disabled = false;
+          button.classList.remove('opacity-50')
+          
         } else {
           console.error("❌ Category creation error:", data.error);
           await Swal.fire({
@@ -166,6 +173,9 @@ export default {
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Tamam'
           }).then(() => console.log("Error: " + data.error));
+          button.disabled = false;
+          button.classList.remove('opacity-50')
+
         }
       } catch (error) {
         console.error("❌ Unexpected error:", error);
@@ -176,6 +186,8 @@ export default {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Tamam'
         });
+        button.disabled = false;
+        button.classList.remove('opacity-50')
       }
     };
 

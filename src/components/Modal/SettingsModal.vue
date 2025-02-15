@@ -12,7 +12,7 @@
       <div class="flex flex-col items-center text-center border-b pb-4">
         <span class="material-icons text-blue-500 text-5xl">settings</span>
         <h2 class="text-2xl font-bold text-gray-800 mt-2">{{ $t('settings.title') }}</h2>
-        <p class="text-sm text-gray-500">{{ $t('ManageYourgeneralsettings') }}</p>
+        <p class="text-sm text-gray-500 ">{{ $t('ManageYourgeneralsettings') }}</p>
       </div>
 
       <div class="mt-4 p-3 bg-gray-100 rounded-lg flex items-center">

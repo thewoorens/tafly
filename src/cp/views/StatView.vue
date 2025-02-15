@@ -18,7 +18,6 @@
       </ul>
     </div>
 
-
     <div class="mt-8 rounded-xl w-full text-gray-900">
       <p v-if="currentTab === 'Gerçek Zamanlı'">Gerçek zamanlı olarak QR kodu tarayan cihazlar burada listelenecek.</p>
       <div v-else-if="currentTab === 'Tüm Zamanlar'">
@@ -67,7 +66,10 @@
 </template>
 
 <script>
+import { Chart, registerables } from 'chart.js';
 import AllTimesTable from "@/cp/views/tables/AllTimesTable.vue";
+
+Chart.register(...registerables);
 
 export default {
   name: 'StatView',
@@ -76,12 +78,15 @@ export default {
     return {
       currentTab: 'Tüm Zamanlar',
       tabs: [this.$t('allTime'), 'Sipariş Verenler', 'İşaretlenenler', 'Ankete Katılanlar', 'Engellenenler'],
+      scanChart: null,
+      deviceChart: null,
+      methodChart: null,
     };
   },
   mounted() {
     this.renderScanChart();
     this.renderDeviceChart();
-    this.renderMethodChart();  // Yeni grafik render'ı
+    this.renderMethodChart();
   },
   methods: {
     changeTab(tab) {
@@ -95,7 +100,7 @@ export default {
         this.scanChart.destroy();
       }
 
-      this.scanChart = new window.Chart(ctx, {
+      this.scanChart = new Chart(ctx, {
         type: "bar",
         data: {
           labels: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
@@ -120,7 +125,7 @@ export default {
         this.deviceChart.destroy();
       }
 
-      this.deviceChart = new window.Chart(ctx, {
+      this.deviceChart = new Chart(ctx, {
         type: "pie",
         data: {
           labels: ["Mobil", "Tablet", "Bilgisayar"],
@@ -144,7 +149,7 @@ export default {
         this.methodChart.destroy();
       }
 
-      this.methodChart = new window.Chart(ctx, {
+      this.methodChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"],
@@ -162,10 +167,7 @@ export default {
           },
           scales: {
             y: {
-              // the data minimum used for determining the ticks is Math.min(dataMin, suggestedMin)
               suggestedMin: 30,
-
-              // the data maximum used for determining the ticks is Math.max(dataMax, suggestedMax)
               suggestedMax: 50,
             }
           }

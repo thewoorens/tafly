@@ -31,7 +31,7 @@
   "addaShortDescriptionaboutYourcaTegory": "Fügen Sie eine kurze Beschreibung zu Ihrer Kategorie hinzu",
   "categoryImage": "Kategoriebild",
   "saveCategory": "Kategorie speichern",
-  "ManageYourgeneralsettings": "Verwalten Sie Ihre allgemeinen Einstellungen",
+  "ManageYourgeneralsettings": "Verwalten Sie Ihre allgemeinen Einstellungen. Die Anwendung wird neu gestartet, nachdem die Einstellungen gespeichert wurden.",
   "signOut": "Ausloggen",
   "devicesWithQRMenu": "Geräte, auf denen das QR-Menü angezeigt wird",
   "allTime": "Alle Zeiten",

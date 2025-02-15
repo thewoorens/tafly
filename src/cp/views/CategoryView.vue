@@ -1,7 +1,8 @@
+<!--suppress ALL -->
 <template>
   <div class="max-w-7xl mx-auto p-6">
     <button
-        :data-tippy-content="$t('addNewCategory')"
+        v-tooltip.bottom="this.$t('addNewCategory').value"
         @click="openModal"
         class="p-3 pointer rounded-lg shadow-lg text-white font-medium bg-indigo-600 hover:bg-indigo-700 transition-all mb-6 flex"
     >
@@ -29,9 +30,9 @@
 
           <div>
             <button
+                v-tooltip.top="category.name + ' isimli kategoriyi silin'"
                 @click="deleteCategory(category.id)"
                 class="p-2 text-white font-medium bg-red-600 rounded-lg hover:bg-red-700 transition-all"
-                :data-tippy-content="`${category.name} Kategorisini Silin`"
             >
               <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +85,6 @@
 import {ref, onMounted, onUpdated} from "vue";
 import CreateCategoryModal from "./Modal/CreateCategoryModal.vue";
 import Swal from "sweetalert2";
-import tippy from "tippy.js";
 
 export default {
   name: "CategoryView",
@@ -174,12 +174,12 @@ export default {
         }
 
         const result = await Swal.fire({
-          title: "Kategori Silmek İstediğinize Emin Misiniz?",
+          title: "Kategoriyi Silmek İstediğinize Emin Misiniz?",
           text: "Silinen kategoriye bağlı tüm resimler ve ürünler de silinecek!",
           icon: "warning",
           showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
           confirmButtonText: "Evet, sil!",
           cancelButtonText: "Hayır, iptal et",
         });
@@ -205,7 +205,7 @@ export default {
 
           if (cachedCategories && cachedCategories.success && Array.isArray(cachedCategories.data)) {
             const updatedCategories = cachedCategories.data.filter((cat) => cat.id !== categoryId);
-            localStorage.setItem("cachedCategories", JSON.stringify({ success: true, data: updatedCategories }));
+            localStorage.setItem("cachedCategories", JSON.stringify({success: true, data: updatedCategories}));
           }
 
           await fetchCategories(); // Kategorileri yeniden çek
@@ -220,23 +220,12 @@ export default {
       }
     };
 
-    const initTippy = () => {
-      tippy("[data-tippy-content]", {
-        allowHTML: true,
-        interactive: true,
-        theme: "material",
-        placement: "bottom",
-        arrow: true,
-      });
-    };
 
     onMounted(() => {
       fetchCategories();
-      initTippy();
     });
 
     onUpdated(() => {
-      initTippy();
     });
 
     return {

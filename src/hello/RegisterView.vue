@@ -68,6 +68,7 @@
 
         <button
             type="submit"
+            id="registerButton"
             class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all"
         >
           Kayıt Ol
@@ -169,6 +170,9 @@ export default {
     },
 
     register() {
+      const button = document.getElementById("registerButton");
+      button.disabled = true;
+      button.classList.add('opacity-50');
       this.globalError = '';
       if (!this.validateForm()) {
         return;
@@ -194,14 +198,20 @@ export default {
                 throw new Error(data.error || 'Kayıt sırasında bir hata oluştu.');
               });
             }
+            button.disabled = false;
+            button.classList.remove('opacity-50');
             return response.json();
           })
           .then(() => {
             this.$router.push('/login'); // Kayıt başarılıysa login sayfasına yönlendir
+            button.disabled = false;
+            button.classList.remove('opacity-50');
           })
           .catch((error) => {
             this.globalError = error.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
             console.error('Kayıt hatası:', error);
+            button.disabled = false;
+            button.classList.remove('opacity-50');
           });
     },
   },

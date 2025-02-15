@@ -31,7 +31,7 @@
   "addaShortDescriptionaboutYourcaTegory": "Kategoriniz hakkında kısa bir açıklama ekleyin",
   "categoryImage": "Kategori Resmi",
   "saveCategory": "Kategoriyi Kaydet",
-  "ManageYourgeneralsettings": "Genel ayarlarınızı yönetin", 
+  "ManageYourgeneralsettings": "Genel ayarlarınızı yönetin. Ayarlar kaydedildikten sonra uygulama yeniden başlatılacaktır.",
   "signOut": "Çıkış Yap",
   "devicesWithQRMenu": "QR Menünün Gösterildiği Cihazlar",
   "allTime": "Tüm Zamanlar",
