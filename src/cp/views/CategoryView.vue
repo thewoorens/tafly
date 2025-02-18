@@ -118,17 +118,6 @@ export default {
 
     const fetchCategories = async () => {
       try {
-        // Önce localStorage'dan kategorileri kontrol et
-        // const cachedCategories = localStorage.getItem("cachedCategories");
-        //
-        // if (cachedCategories) {
-        //   const parsedCategories = JSON.parse(cachedCategories);
-        //   if (parsedCategories.success && Array.isArray(parsedCategories.data)) {
-        //     categories.value = parsedCategories; // categories.value'yi doğru bir şekilde ayarla
-        //     return; // Eğer localStorage'da varsa, sunucuya istek göndermeden çık
-        //   }
-        // }
-
         const userInfo = localStorage.getItem("userInfo");
         if (!userInfo) {
           throw new Error("User information not found in localStorage");

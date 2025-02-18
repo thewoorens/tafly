@@ -55,7 +55,7 @@ export default {
         .then((response) => {
           this.verify = response.data.setup;
         }).catch((error) => {
-          console.log(error);
+      console.log(error);
     })
 
   },

@@ -7,6 +7,8 @@ import RegisterView from '@/hello/RegisterView.vue';
 import CustomerPanel from '@/cp/CustomerPanel.vue';
 import CategoryView from "@/cp/views/CategoryView.vue";
 import SurveyView from "@/cp/views/SurveyView.vue";
+import BranchView from "@/cp/views/BranchView.vue";
+import CustomizeView from "@/cp/views/tables/CustomizeView.vue";
 
 const routes = [
     {
@@ -37,6 +39,16 @@ const routes = [
                 path: 'category',
                 name: 'CategoryView',
                 components: {cp: CategoryView},
+            },
+            {
+                path: 'branch',
+                name: 'BranchView',
+                components: {cp: BranchView},
+            },
+            {
+                path: 'customize',
+                name: 'CustomizeView',
+                components: {cp: CustomizeView},
             },
         ],
     },

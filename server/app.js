@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const itemRoutes = require('./routes/itemRoutes');
 const authRoutes = require('./routes/authRoutes');
 const businessRoutes = require('./routes/businessRoutes');
+const branchRoutes = require('./routes/branchRoutes')
 const cors = require('cors');
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -38,17 +39,14 @@ const authMiddleware = (req, res, next) => {
     }
 };
 
-// ✅ Token Doğrulama Endpoint
 app.get('/api/auth/verify', authMiddleware, (req, res) => {
     res.status(200).json({message: "Token geçerli", user: req.user});
 });
 
-// ✅ Korunan Endpoint (Sadece Yetkililere Açık)
 app.get('/api/protected', authMiddleware, (req, res) => {
     res.json({message: "Bu veri sadece yetkili kullanıcılar içindir.", user: req.user});
 });
 
-// ✅ MongoDB Bağlantısı
 mongoose.connect(process.env.MONGODB_URI, {
     maxPoolSize: 10,
     serverSelectionTimeoutMS: 5000,
@@ -60,6 +58,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use('/api', itemRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/business', businessRoutes);
+app.use('/api/branch', branchRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`✅  Backend Server Running on Port: http://localhost:${port}`));

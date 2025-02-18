@@ -2,9 +2,9 @@
   <button
       id="help-button"
       @click="openHelpModal"
-      class="fixed bottom-4 right-6 bg-blue-500 text-white p-3 rounded-xl pt-4 shadow-lg hover:bg-blue-600 transition-all z-50 jump"
+      class="fixed bottom-4 right-6 bg-blue-500 text-white p-2 rounded-xl pt-3 shadow-lg hover:bg-blue-600 transition-all z-50 jump"
   >
-    <i class="material-icons">help</i>
+    <i class="material-icons text-md">help</i>
   </button>
 
   <HelpModal
