@@ -28,29 +28,29 @@
           <p class="mt-2">Esnek abonelik planlarımızla, ücretsiz temel planımızı deneyebilir veya premium paketlerimizle
             ekstra özelleştirme ve reklamsız deneyim elde edebilirsiniz. Tafly ile işinizi bir adım öteye taşıyın!</p>
 
-          <!-- Butonlar -->
-          <div class="flex flex-col md:flex-row gap-4 mt-6">
-            <!-- Mail Gönderme Butonu -->
-            <button @click="sendEmail"
-                    class="flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
-              <span class="material-icons">email</span>
-              <span>Bize Ulaşın</span>
-            </button>
+   <!-- Butonlar -->
+<div class="flex flex-col md:flex-row gap-4 mt-6">
+  <!-- Mail Gönderme Butonu -->
+  <a href="https://kernelsoftware.com.tr/" target="_blank"
+     class="flex items-center justify-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+    <span class="material-icons">email</span>
+    <span>Bize Ulaşın</span>
+  </a>
 
-            <!-- Sunucu Durumu Butonu -->
-            <button @click="checkServerStatus"
-                    class="flex items-center justify-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
-              <span class="material-icons">cloud</span>
-              <span>Sunucu Durumu</span>
-            </button>
+  <!-- Sunucu Durumu Butonu -->
+  <a href="https://kernelsoftware.com.tr/" target="_blank"
+     class="flex items-center justify-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
+    <span class="material-icons">cloud</span>
+    <span>Sunucu Durumu</span>
+  </a>
 
-            <!-- Kullanım Kılavuzu Butonu -->
-            <button @click="openUserGuide"
-                    class="flex items-center justify-center gap-2 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
-              <span class="material-icons">menu_book</span>
-              <span>Kullanım Kılavuzu</span>
-            </button>
-          </div>
+  <!-- Kullanım Kılavuzu Butonu -->
+  <a href="https://kernelsoftware.com.tr/" target="_blank"
+     class="flex items-center justify-center gap-2 bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+    <span class="material-icons">menu_book</span>
+    <span>Kullanım Kılavuzu</span>
+  </a>
+</div>
 
           <!-- Alt Bilgi -->
           <div class="text-center text-sm text-gray-500 mt-6 pt-6 border-t border-gray-200">
