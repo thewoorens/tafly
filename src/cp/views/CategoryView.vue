@@ -9,17 +9,17 @@
       <i class="material-icons align-center mr-2">add_circle</i> {{ $t('addCategory') }}
     </button>
 
-    <div v-if="!categories || !categories.data || categories.data.length === 0" class="text-center py-10">
+    <div v-if="!categories || categories.length === 0" class="text-center py-10">
       <p class="text-gray-600">Herhangi bir Kategori eklenmemiş. Lütfen bir kategori ekleyerek başlayın.</p>
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="category in categories.data" :key="category.id" class="bg-white shadow-lg rounded-lg p-4">
+      <div v-for="category in categories" :key="category._id" class="bg-white shadow-lg rounded-lg p-4">
         <img
-            :src="category.image"
+            :src="category.Image"
             alt="Kategori Resmi"
             class="w-full h-40 object-cover rounded-t-lg cursor-pointer hover:opacity-75 transition-all"
-            @click="openImageModal(category.image)"
+            @click="openImageModal(category.Image)"
         />
 
         <div class="p-4 flex justify-between items-center w-full">
@@ -31,7 +31,7 @@
           <div>
             <button
                 v-tooltip.top="category.name + ' isimli kategoriyi silin'"
-                @click="deleteCategory(category.id)"
+                @click="deleteCategory(category._id)"
                 class="p-2 text-white font-medium bg-red-600 rounded-lg hover:bg-red-700 transition-all"
             >
               <svg
@@ -123,12 +123,12 @@ export default {
           throw new Error("User information not found in localStorage");
         }
 
-        const ownerId = JSON.parse(userInfo)?.id;
+        const ownerId = JSON.parse(userInfo)?._id;
         if (!ownerId) {
           throw new Error("ownerId not found in userInfo");
         }
 
-        const response = await fetch(`http://localhost:3000/api/get/categories?ownerId=${ownerId}`, {
+        const response = await fetch(`http://localhost:3000/api/category/getAll?ownerId=${ownerId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -142,8 +142,8 @@ export default {
 
         const data = await response.json();
 
-        if (!data || data.error === "No categories found") {
-          categories.value = {success: true, data: []}; // Kategoriler boşsa, data'yı boş bir dizi olarak ayarla
+        if (!data || data.length === 0) {
+          categories.value = []; // Kategoriler boşsa, data'yı boş bir dizi olarak ayarla
           localStorage.removeItem("cachedCategories");
         } else {
           categories.value = data;
@@ -157,9 +157,11 @@ export default {
 
     const deleteCategory = async (categoryId) => {
       try {
-        const ownerId = JSON.parse(localStorage.getItem("userInfo"))?.id;
+        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        const ownerId = userInfo?._id;
+
         if (!ownerId) {
-          throw new Error("ownerId not found in localStorage");
+          throw new Error("ownerId not found in userInfo");
         }
 
         const result = await Swal.fire({
@@ -175,13 +177,14 @@ export default {
 
         if (result.isConfirmed) {
           const response = await fetch(
-              `http://localhost:3000/api/delete/deleteCategory?id=${categoryId}`,
+              `http://localhost:3000/api/category/delete/${categoryId}`,
               {
                 method: "DELETE",
                 headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${localStorage.getItem("auth-token")}`,
                 },
+                body: JSON.stringify({ownerId}), // ownerId'yi body'ye ekle
               }
           );
 
@@ -191,10 +194,9 @@ export default {
 
           // Kategori silindikten sonra localStorage'ı güncelle
           const cachedCategories = JSON.parse(localStorage.getItem("cachedCategories"));
-
-          if (cachedCategories && cachedCategories.success && Array.isArray(cachedCategories.data)) {
-            const updatedCategories = cachedCategories.data.filter((cat) => cat.id !== categoryId);
-            localStorage.setItem("cachedCategories", JSON.stringify({success: true, data: updatedCategories}));
+          if (cachedCategories && Array.isArray(cachedCategories)) {
+            const updatedCategories = cachedCategories.filter((cat) => cat._id !== categoryId);
+            localStorage.setItem("cachedCategories", JSON.stringify(updatedCategories));
           }
 
           await fetchCategories(); // Kategorileri yeniden çek

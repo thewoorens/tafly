@@ -8,8 +8,8 @@ import CustomerPanel from '@/cp/CustomerPanel.vue';
 import CategoryView from "@/cp/views/CategoryView.vue";
 import SurveyView from "@/cp/views/SurveyView.vue";
 import BranchView from "@/cp/views/BranchView.vue";
-import CustomizeView from "@/cp/views/tables/CustomizeView.vue";
-
+import CustomizeView from "@/cp/views/CustomizeView.vue";
+import PackageView from "@/cp/views/PackageView.vue"
 const routes = [
     {
         path: '/cp',
@@ -50,6 +50,11 @@ const routes = [
                 name: 'CustomizeView',
                 components: {cp: CustomizeView},
             },
+            {
+                path: 'package',
+                name: 'PackageView',
+                components: {cp: PackageView},
+            }
         ],
     },
     {

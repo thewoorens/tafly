@@ -18,17 +18,17 @@ const vTooltip = {
         tooltip.textContent = binding.value;
         Object.assign(tooltip.style, {
             position: "absolute",
-            backgroundColor: "black",
+            backgroundColor: "#477BEE",
             color: "white",
             padding: "6px 10px",
             borderRadius: "5px",
             fontSize: "14px",
-            whiteSpace: "nowrap",
             display: "none",
             zIndex: "1000",
             opacity: "0",
-            transition: "opacity 0.3s ease-in-out, transform 0.2s ease-out",
+            transition: "opacity 0.2s ease-in-out, transform 0.2s ease-out",
             transform: "scale(0.95)",
+            maxWidth: "300px",
         });
 
         document.body.appendChild(tooltip);

@@ -5,6 +5,7 @@ const itemRoutes = require('./routes/itemRoutes');
 const authRoutes = require('./routes/authRoutes');
 const businessRoutes = require('./routes/businessRoutes');
 const branchRoutes = require('./routes/branchRoutes')
+const categoryRoutes = require('./routes/categoryRouter');
 const cors = require('cors');
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -13,7 +14,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: [process.env.CLIENT_URL, 'http://localhost:8081'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -47,18 +48,26 @@ app.get('/api/protected', authMiddleware, (req, res) => {
     res.json({message: "Bu veri sadece yetkili kullanıcılar içindir.", user: req.user});
 });
 
-mongoose.connect(process.env.MONGODB_URI, {
-    maxPoolSize: 10,
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-})
-    .then(() => console.log('✅  MongoDB bağlantısı başarılı! (TaflyCP veritabanı)'))
-    .catch(err => console.log('❌  MongoDB bağlantı hatası:', err.message));
+const connectWithRetry = () => {
+    mongoose.connect(process.env.MONGODB_URI, {
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+    })
+        .then(() => console.log('✅  MongoDB bağlantısı başarılı! (TaflyCP veritabanı)'))
+        .catch(err => {
+            console.log('❌  MongoDB bağlantı hatası:', err.message);
+            setTimeout(connectWithRetry, 5000); // 5 saniye sonra tekrar dene
+        });
+};
+
+connectWithRetry();
 
 app.use('/api', itemRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/branch', branchRoutes);
+app.use('/api/category', categoryRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`✅  Backend Server Running on Port: http://localhost:${port}`));

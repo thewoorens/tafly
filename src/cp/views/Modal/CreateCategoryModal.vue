@@ -21,7 +21,7 @@
                 type="text"
                 id="category-name"
                 class="mt-2 w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 transition-all"
-                :placeholder=" $t('enterCategoryname')"
+                :placeholder="$t('enterCategoryname').value"
                 required
             />
           </div>
@@ -33,7 +33,7 @@
                 id="category-desc"
                 rows="3"
                 class="mt-2 w-full p-3 border rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500 transition-all"
-                :placeholder="$t('addaShortDescriptionaboutYourcaTegory')"
+                :placeholder="$t('addaShortDescriptionaboutYourcaTegory').value"
                 required
             ></textarea>
           </div>
@@ -65,7 +65,7 @@
                 id="createBtn"
                 class="w-full p-3 rounded-lg shadow-lg text-white font-medium bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 transition-all"
             >
-            {{ $t('saveCategory') }}
+              {{ $t('saveCategory') }}
             </button>
           </div>
         </form>
@@ -77,6 +77,7 @@
 <script>
 import {ref} from "vue";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 export default {
   name: "CreateCategoryModal",
@@ -111,10 +112,9 @@ export default {
       const button = document.getElementById("createBtn");
       button.disabled = true;
       button.classList.add("opacity-50");
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      const token = localStorage.getItem("auth-token");
 
-      if (!userInfo || !userInfo.id) {
+      const token = localStorage.getItem("auth-token");
+      if (!JSON.parse(localStorage.getItem("userInfo"))?._id) {
         await Swal.fire({
           title: 'Hata',
           text: "Kullanıcı bilgileri bulunamadı. Lütfen giriş yapın.",
@@ -122,6 +122,8 @@ export default {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Tamam'
         });
+        button.disabled = false;
+        button.classList.remove("opacity-50");
         return;
       }
 
@@ -133,49 +135,55 @@ export default {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Tamam'
         });
+        button.disabled = false;
+        button.classList.remove("opacity-50");
         return;
       }
+
 
       const formData = new FormData();
       formData.append("name", categoryName.value);
       formData.append("description", categoryDesc.value);
-      formData.append("ownerId", userInfo.id); // userInfo.id kullanılıyor
+      formData.append("ownerId", JSON.parse(localStorage.getItem("userInfo"))?._id); // userInfo.id kullanılıyor
       formData.append("image", categoryImage.value);
 
       try {
-        const response = await fetch("http://localhost:3000/api/post/createCategory", {
-          method: "POST",
-          headers: {
-            'Authorization': `Bearer ${token}`, // Token'ı header'a ekleyin
-          },
-          body: formData,
-        });
+        const response = await axios.post(
+            "http://localhost:3000/api/category/create",
+            {
+              name: categoryName.value,
+              description: categoryDesc.value,
+              ownerId: JSON.parse(localStorage.getItem("userInfo"))?._id,
+              image: categoryImage.value
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+        );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
-          console.log("✅ Category created successfully:", data);
-          emit("category-created"); // Yeni kategori eklendiğini bildir
+        if (response.data) {
+          console.log("✅ Category created successfully:", response.data);
+          await Swal.fire({
+            title: 'Kategori Eklendi',
+            text: "Kategori Başarıyla Eklendi!",
+            icon: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Tamam'
+          });
+          emit("category-created");
           closeModal();
-          button.disabled = false;
-          button.classList.remove('opacity-50')
-          
         } else {
-          console.error("❌ Category creation error:", data.error);
+          console.error("❌ Category creation error:", response.data.error);
           await Swal.fire({
             title: 'Kategori Eklenemedi',
             text: "Bu işlem gerçekleşirken bir hata oluştu!",
             icon: 'warning',
             confirmButtonColor: '#3085d6',
             confirmButtonText: 'Tamam'
-          }).then(() => console.log("Error: " + data.error));
-          button.disabled = false;
-          button.classList.remove('opacity-50')
-
+          });
         }
       } catch (error) {
         console.error("❌ Unexpected error:", error);
@@ -186,8 +194,9 @@ export default {
           confirmButtonColor: '#3085d6',
           confirmButtonText: 'Tamam'
         });
+      } finally {
         button.disabled = false;
-        button.classList.remove('opacity-50')
+        button.classList.remove("opacity-50");
       }
     };
 
@@ -211,7 +220,6 @@ export default {
     };
   },
 };
-
 </script>
 
 <style scoped>
