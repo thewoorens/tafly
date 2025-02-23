@@ -68,11 +68,6 @@ import {ref} from "vue";
 import Swal from 'sweetalert2'
 export default {
   name: 'BranchForm',
-  created() {
-    console.log(JSON.parse(localStorage.getItem('userInfo')));
-    console.log(JSON.parse(localStorage.getItem("businessInfo"))?._id);
-
-  },
   setup() {
     const branchData = ref({
       name: '',

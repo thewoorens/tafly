@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full">
+  <div class="h-full select-none">
     <div v-if="isSidebarOpen"
          class="flex flex-col items-center w-50 h-full overflow-hidden text-gray-700 bg-gray-100 rounded">
       <a class="flex items-center w-full px-3 mt-3" href="#">
@@ -104,7 +104,7 @@
           </a>
         </div>
       </div>
-      <a class="flex items-center justify-center w-full h-16 mt-auto bg-gray-200" href="#">
+      <a @click="openMenu" class="flex items-center justify-center w-full h-16 mt-auto bg-gray-200" href="#">
         <i class="material-icons">open_in_new</i>
         <span class="ml-2 text-sm font-medium">{{ $t('previewMenu') }}</span>
       </a>
@@ -198,7 +198,7 @@
           <i class="material-icons">{{ isSidebarOpen ? 'close' : 'menu' }}</i>
         </a>
       </div>
-      <a class="flex items-center justify-center w-16 h-16 mt-auto bg-gray-200 " href="#">
+      <a @click="openMenu" class="flex items-center justify-center w-16 h-16 mt-auto bg-gray-200 " href="#">
         <i class="material-icons">open_in_new</i>
 
       </a>
@@ -222,6 +222,9 @@ export default {
     };
   },
   methods: {
+    openMenu() {
+      window.open("http://localhost:8080/menu/"+JSON.parse(localStorage.getItem('businessInfo'))?.visitorId, '_blank');
+    },
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
     },

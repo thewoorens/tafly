@@ -6,16 +6,14 @@ const mongoose = require('mongoose');
 // Kategori Oluşturma (Create)
 router.post('/create', async (req, res) => {
     try {
-        const {name, description, Image, ownerId} = req.body;
+        const {name, description, Image, ownerId, businessId} = req.body;
 
-        console.log('Request body:', req.body);
-
-        if (!name || !description || !ownerId) {
+        if (!name || !description || !ownerId || !businessId) {
             return res.status(400).json({message: 'Lütfen tüm gerekli alanları doldurun.'});
         }
 
-        if (!mongoose.Types.ObjectId.isValid(ownerId)) {
-            return res.status(400).json({message: 'Geçersiz ownerId.'});
+        if (!mongoose.Types.ObjectId.isValid(ownerId) || !mongoose.Types.ObjectId.isValid(businessId)) {
+            return res.status(400).json({message: 'Geçersiz ownerId veya businessId.'});
         }
 
         const newCategory = new Category({
@@ -23,6 +21,7 @@ router.post('/create', async (req, res) => {
             description,
             Image,
             ownerId,
+            businessId,
         });
 
         await newCategory.save();
@@ -33,7 +32,6 @@ router.post('/create', async (req, res) => {
         }
     }
 });
-
 router.get('/getAll', async (req, res) => {
     try {
         const { ownerId } = req.query;

@@ -1,127 +1,178 @@
 <template>
-  <div class="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-    <h1 class="text-2xl font-bold mb-6">QR Kod Yönetim Paneli</h1>
+  <div class="flex items-center justify-center w-full min-h-screen ">
+    <div class="p-8 rounded-lg max-w-4xl w-full bg-white shadow-lg">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">QR Kod Ön İzleme Paneli</h1>
+      <p class="text-center text-gray-600 mb-8">Aşağıdaki QR kodunu tarayarak menünüze ulaşabilirsiniz.</p>
 
-    <div class="flex flex-col md:flex-row gap-8">
-      <div class="w-full md:w-1/3 space-y-6">
-        <div>
-          <label class="block text-sm font-medium text-gray-700">QR İçeriği</label>
-          <input
-              v-model="qrData"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              placeholder="https://example.com"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Ön Plan Rengi</label>
-          <input
-              v-model="qrForeground"
-              type="color"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Arka Plan Rengi</label>
-          <input
-              v-model="qrBackground"
-              type="color"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Logo URL (Opsiyonel)</label>
-          <input
-              v-model="qrLogo"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              placeholder="https://example.com/logo.png"
-          />
-        </div>
-
-        <div>
-          <button
-              @click="updateQRCode"
-              class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            QR Kodunu Güncelle
-          </button>
-        </div>
-      </div>
-
-      <div class="w-full md:w-2/3 flex justify-center items-center">
-        <div class="relative">
+      <div class="flex flex-col lg:flex-row items-center justify-center">
+        <div class="w-full lg:w-2/4 flex justify-center items-center relative mb-8 lg:mb-0">
           <img
               src="./iphone.png"
               alt="iPhone Mockup"
-              class="w-full max-w-[300px] md:max-w-[400px]"
+              class="w-2/3 md:w-1/2 mx-auto select-nones"
           />
-
           <div
-              ref="qrCode"
-              class="absolute top-[45%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[20vw] max-w-28 max-h-28 md:max-w-40 md:max-h-40"
+              @click="openMenu"
+              ref="qrCodeRef"
+              class="absolute hover:scale-105 hover:shadow-xl hover shadow-black shadow- transition top-[42%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
           ></div>
         </div>
+        <div class="w-full lg:w-2/4 flex flex-col items-center">
+          <button
+              @click="downloadQRCode"
+              class="bg-blue-500 w-8/12 text-white p-2 rounded-lg hover:bg-blue-600 transition-all mb-4"
+          >
+            QR Kodunu İndir
+          </button>
+          <button
+              @click="downloadQRCodePDF"
+              class="bg-blue-500 w-8/12 text-white p-2 rounded-lg hover:bg-blue-600 transition-all mb-4"
+          >
+            QR Prototip İndir (PDF)
+          </button>
+          <button
+              v-tooltip="'Bu özelliği kullanabilmek için ücretli plana geçmeniz gerekmektedir.'"
+              disabled
+              @click="downloadQRCode"
+              class="bg-blue-500 w-8/12 cursor-no-drop  disabled:bg-gray-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all mb-4"
+          >
+            QR Kodunun Üzerine Logo Ekle
+          </button>
+          <button
+              v-tooltip="'Bu özelliği kullanabilmek için ücretli plana geçmeniz gerekmektedir.'"
+              disabled
+              @click="downloadQRCode"
+              class="bg-blue-500 w-8/12 cursor-no-drop  disabled:bg-gray-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all mb-4"
+          >
+            QR Kodun Arkaplan Rengini Değiştir
+          </button>
+          <button
+              v-tooltip="'Bu özelliği kullanabilmek için ücretli plana geçmeniz gerekmektedir.'"
+              disabled
+              @click="downloadQRCode"
+              class="bg-blue-500 w-8/12 cursor-no-drop disabled:bg-gray-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-all mb-4"
+          >
+            QR Kodun Rengini Değiştir
+          </button>
+        </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
 import QRCodeStyling from 'qr-code-styling';
+import {ref, onMounted} from 'vue';
+import jsPDF from 'jspdf';
 
 export default {
   name: 'CustomizeView',
-  data() {
-    return {
-      qrData: 'https://example.com',
-      qrSize: 200,
-      qrForeground: '#000000',
-      qrBackground: '#ffffff',
-      qrLogo: '',
-      qrCode: null,
+  setup: function () {
+    const qrData = 'https://tafly.co/menu/' + JSON.parse(localStorage.getItem("businessInfo"))?.visitorId;
+    const qrCode = ref(null);
+    const qrCodeRef = ref(null);
+    const qrSize = 150;
+
+    const downloadQRCode = () => {
+      qrCode.value.download({name: "qr-code", extension: "png"});
     };
-  },
-  mounted() {
-    this.qrCode = new QRCodeStyling({
-      width: this.qrSize,
-      height: this.qrSize,
-      data: this.qrData,
-      image: this.qrLogo,
-      dotsOptions: {
-        color: this.qrForeground,
-        type: 'square',
-      },
-      backgroundOptions: {
-        color: this.qrBackground,
-      },
-      imageOptions: {
-        crossOrigin: 'anonymous',
-        margin: 10,
-      },
+
+    const downloadQRCodePDF = () => {
+      const businessInfo = JSON.parse(localStorage.getItem("businessInfo"));
+      if (!businessInfo) {
+        alert("Lütfen önce işletme bilgilerini girin.");
+        return;
+      }
+
+      const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'A4'
+      });
+
+      // Arka plan rengi
+      doc.setFillColor(240, 248, 255); // Hafif mavi arka plan
+      doc.rect(0, 0, doc.internal.pageSize.width, doc.internal.pageSize.height, 'F');
+
+      // Başlık
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(28);
+      doc.setTextColor(0, 123, 255); // Canlı mavi
+      doc.text("QR Code Menu", doc.internal.pageSize.width / 2, 30, {align: 'center'});
+
+      // QR Kodunu ortala
+      const canvas = qrCodeRef.value.querySelector("canvas");
+      const qrImageDataUrl = canvas.toDataURL("image/png");
+      const qrSize = 120;
+      const qrX = (doc.internal.pageSize.width - qrSize) / 2;
+      const qrY = 45;
+      doc.addImage(qrImageDataUrl, 'PNG', qrX, qrY, qrSize, qrSize);
+
+      const textX = doc.internal.pageSize.width / 2 - 25;
+      // İşletme Adı
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(33, 33, 33); // Turuncu ton
+      doc.text(`${businessInfo.name}`, doc.internal.pageSize.width / 2, 175, {align: 'center'});
+
+      // Bilgi İkonları ve Metinleri
+
+      // Adres
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(14);
+      doc.setTextColor(33, 33, 33);
+      doc.text(`${businessInfo.address}`, textX, 190);
+
+      // Telefon
+      doc.text(`${businessInfo.phone}`, textX, 200);
+
+      // Sosyal Medya
+      doc.text(`${businessInfo.social}`, textX, 210);
+
+      // Alt Bilgi
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      doc.text("Powered by https://tafly.co", doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 60 , {align: 'center'});
+
+      // Çerçeve
+      doc.setDrawColor(0, 123, 255);
+      doc.setLineWidth(2);
+      doc.roundedRect(10, 10, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 20, 10, 10);
+
+      // PDF Kaydet
+      doc.output('dataurlnewwindow');
+      doc.save("qr-menu-(tafly.co).pdf");
+    };
+
+
+    const openMenu = () => {
+      window.open(qrData, '_blank');
+    };
+
+    onMounted(() => {
+      qrCode.value = new QRCodeStyling({
+        width: qrSize,
+        height: qrSize,
+        data: qrData,
+        imageOptions: {
+          crossOrigin: 'anonymous',
+          margin: 10,
+        },
+      });
+      qrCode.value.append(qrCodeRef.value);
     });
 
-    this.qrCode.append(this.$refs.qrCode);
-  },
-  methods: {
-    updateQRCode() {
-      this.qrCode.update({
-        data: this.qrData,
-        width: this.qrSize,
-        height: this.qrSize,
-        dotsOptions: {
-          color: this.qrForeground,
-        },
-        backgroundOptions: {
-          color: this.qrBackground,
-        },
-        image: this.qrLogo,
-      });
-    },
+    return {
+      openMenu,
+      qrData,
+      qrCodeRef,
+      downloadQRCode,
+      downloadQRCodePDF,
+    };
   },
 };
 </script>
+
+<style scoped>
+</style>

@@ -145,6 +145,7 @@ export default {
       formData.append("name", categoryName.value);
       formData.append("description", categoryDesc.value);
       formData.append("ownerId", JSON.parse(localStorage.getItem("userInfo"))?._id); // userInfo.id kullanılıyor
+      formData.append("businessId", JSON.parse(localStorage.getItem("businessInfo"))?._id); //
       formData.append("image", categoryImage.value);
 
       try {
@@ -154,6 +155,7 @@ export default {
               name: categoryName.value,
               description: categoryDesc.value,
               ownerId: JSON.parse(localStorage.getItem("userInfo"))?._id,
+              businessId: JSON.parse(localStorage.getItem("businessInfo"))?._id,
               image: categoryImage.value
             },
             {

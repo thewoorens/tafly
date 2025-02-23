@@ -119,9 +119,6 @@
 <script>
 export default {
   name: 'ProductsView',
-  created() {
-    console.log(JSON.parse(localStorage.getItem("cachedCategories")));
-  },
   data() {
     return {
       searchQuery: '',

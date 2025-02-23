@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-screen h-screen bg-gray-300">
+  <div class="flex w-screen h-screen bg-gray-400">
     <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-black"
          style="z-index: 999999 !important;">
 
@@ -38,6 +38,7 @@ import SetupView from "@/cp/views/SetupView.vue";
 
 export default {
   name: 'CustomerPanel',
+
   data() {
     return {
       verify: false,
@@ -57,6 +58,12 @@ export default {
         }).catch((error) => {
       console.log(error);
     })
+    this.$axios.get(`http://localhost:3000/api/business/get?ownerId=${JSON.parse(localStorage.getItem('userInfo'))?._id}`)
+        .then(response => {
+          localStorage.setItem("businessInfo", JSON.stringify(response.data.business));
+        }).catch(error => {
+      console.log(error);
+    });
 
   },
   methods: {

@@ -36,7 +36,14 @@ const businessSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    visitorId: {
+        type: String,
+        default: function () {
+            return this.name.toLowerCase().replace(/ /g, '-').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c');
+        }
+    },
+    settings: {type: JSON, default: {}},
 }, {timestamps: true});
 
 const Business = mongoose.model('Business', businessSchema);

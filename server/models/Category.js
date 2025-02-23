@@ -19,6 +19,11 @@ const categorySchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    businessId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Business',
+        required: true,
+    },
 }, { timestamps: true });
 
 categorySchema.index({ ownerId: 1, name: 1 }, { unique: true });

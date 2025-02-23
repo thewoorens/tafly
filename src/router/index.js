@@ -9,7 +9,8 @@ import CategoryView from "@/cp/views/CategoryView.vue";
 import SurveyView from "@/cp/views/SurveyView.vue";
 import BranchView from "@/cp/views/BranchView.vue";
 import CustomizeView from "@/cp/views/CustomizeView.vue";
-import PackageView from "@/cp/views/PackageView.vue"
+import PackageView from "@/cp/views/PackageView.vue";
+
 const routes = [
     {
         path: '/cp',
@@ -70,6 +71,18 @@ const routes = [
     {
         path: '/',
         redirect: '/login',
+    },
+    {
+        path: '/verify',
+        name: 'VerifyView',
+        component: () => import('@/hello/VerifyView.vue'),
+        props: route => ({email: route.query.email})
+    },
+    {
+        path: '/menu/:menuName',
+        name: 'MenuView',
+        component: () => import('@/menu/Menu.vue'),
+        props: true,
     }
 ];
 

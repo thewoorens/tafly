@@ -95,12 +95,6 @@ export default {
         button.style.backgroundColor = "blue";
         localStorage.setItem("userInfo", JSON.stringify(response.data.user));
         localStorage.setItem("auth-token", response.data.token);
-        this.$axios.get(`http://localhost:3000/api/business/get?ownerId=${JSON.parse(localStorage.getItem('userInfo'))?._id}`)
-            .then(response => {
-              localStorage.setItem("businessInfo", JSON.stringify(response.data.business));
-            }).catch(error => {
-          console.log(error);
-        });
         window.location.href = '/cp';
       }).catch((err) => {
         this.handleLoginError(err)

@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const businessRoutes = require('./routes/businessRoutes');
 const branchRoutes = require('./routes/branchRoutes')
 const categoryRoutes = require('./routes/categoryRouter');
+const visitorRoutes = require('./routes/visitorRouter');
 const cors = require('cors');
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
@@ -14,7 +15,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(cors({
-    origin: [process.env.CLIENT_URL, 'http://localhost:8081'],
+    origin: process.env.CLIENT_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -68,6 +69,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/business', businessRoutes);
 app.use('/api/branch', branchRoutes);
 app.use('/api/category', categoryRoutes);
+app.use('/api/visitor', visitorRoutes);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`✅  Backend Server Running on Port: http://localhost:${port}`));

@@ -132,12 +132,12 @@ export default {
       }).then(() => {
         Swal.fire({
           title: 'Kayıt Başarılı!',
-          text: 'Hesabınız başarıyla oluşturuldu. Giriş yapabilirsiniz.',
+          text: 'Hesabınız başarıyla oluşturuldu. Hesabınızı doğrulamak için lütfen e-posta adresinize göndreilen kodu giriniz.',
           icon: 'success',
           confirmButtonText: 'Tamam'
         }).then(
             () => {
-              this.$router.push('/login');
+              this.$router.push(`/verify?email=${encodeURIComponent(this.email)}`);
             }
         );
       }).catch((err) => {
